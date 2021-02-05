@@ -1,0 +1,22 @@
+# Git files
+.git
+.gitignore
+README.md
+LICENSE
+
+# env files
+.env
+
+# node Files
+node_modules
+npm-debug.log
+
+# Docker files
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# To prevent storing dev/temporary container data
+tmp/*
+.vscode
+dist

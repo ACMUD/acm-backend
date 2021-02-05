@@ -1,6 +1,6 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
+import express, { Request, Response } from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
 
 // App
 const app = express();
@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // API
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
   res.send('Hola mundo');
 });
 
