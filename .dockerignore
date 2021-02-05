@@ -6,6 +6,7 @@ LICENSE
 
 # env files
 .env
+.env.db
 
 # node Files
 node_modules

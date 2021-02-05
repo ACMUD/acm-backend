@@ -10,8 +10,8 @@ function cleanFolderRecursively(folder) {
       if (isDir) {
         cleanFolderRecursively(fullPath);
       } else {
-        console.log(`[Clean] Remove ${fullPath}`);
         fs.rmSync(fullPath);
+        console.log(`[Clean] Remove ${fullPath}`);
       }
     });
 
@@ -26,7 +26,7 @@ function cleanFolderRecursively(folder) {
   }
 }
 
-const buildPath = 'dist';
+const buildPath = './dist';
 
 console.log(`[Clean] Cleaning ${buildPath} folder...`);
 

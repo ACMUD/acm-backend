@@ -9,3 +9,21 @@ services:
       - 5000:5000
     volumes:
       - ./src:/app/src
+    depends_on:
+      - db
+    links:
+      - db
+
+  db:
+    container_name: postgresdb
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${DBNAME}
+      POSTGRES_USER: ${DBUSER}
+      POSTGRES_PASSWORD: ${DBPASS}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
