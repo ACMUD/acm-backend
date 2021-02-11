@@ -1,11 +1,10 @@
-import dotenv from 'dotenv';
-import { createServer } from './app';
-
-// Load environment Variables
-dotenv.config();
+import 'dotenv/config'; // Load environment Variables in .env file
+import { createServer } from 'http';
+import { createApp } from './app';
 
 // Create new Server
-const server = createServer();
+const app = createApp();
+const server = createServer(app);
 
 // Start server
 const PORT = process.env.PORT || 5000;
