@@ -1,4 +1,6 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
+import { usersRouter } from '../modules/users';
+
 import error404 from '../middlewares/error404';
 import errorHandler from '../middlewares/errorHandler';
 
@@ -6,14 +8,7 @@ import errorHandler from '../middlewares/errorHandler';
 const apiRouter = Router();
 
 // Add API Routes
-apiRouter.get('/', (req: Request, res: Response) => {
-  res.send({ message: 'Hola mundo' });
-});
-
-apiRouter.post('/', (req: Request, res: Response) => {
-  const data = req.body;
-  res.send(data);
-});
+apiRouter.use(usersRouter);
 
 // Add MiddleWares
 apiRouter.use(error404);
