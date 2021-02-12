@@ -4,9 +4,9 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 
-import apiRouter from './apiRouter';
+import apiRouter from './routes';
 
-export function createServer() {
+export function createApp() {
   // Create App
   const app = express();
 
@@ -23,6 +23,6 @@ export function createServer() {
   // API
   app.use('/', apiRouter);
 
-  // Return new Server
+  // Return new App
   return app;
 }

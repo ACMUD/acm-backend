@@ -1,14 +1,17 @@
-import dotenv from 'dotenv';
-import { createServer } from './app';
-
-// Load environment Variables
-dotenv.config();
+import 'dotenv/config'; // Load environment Variables in .env file
+import { createServer } from 'http';
+import { createApp } from './app';
 
 // Create new Server
-const server = createServer();
+async function initServer() {
+  const app = createApp();
+  const server = createServer(app);
 
-// Start server
-const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
-  console.info(`The server is running in the port ${PORT}`);
-});
+  // Start server
+  const PORT = process.env.PORT || 5000;
+  server.listen(PORT, () => {
+    console.info(`The server is running in the port ${PORT}`);
+  });
+}
+
+initServer();
