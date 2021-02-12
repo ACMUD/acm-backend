@@ -1,4 +1,4 @@
-FROM node:14
+FROM node:15
 
 RUN mkdir /app
 
@@ -12,4 +12,4 @@ EXPOSE 5000
 
 COPY . .
 
-CMD [ "npm", "run", "start" ]
+CMD [ "npm", "run", "start:dev" ]
