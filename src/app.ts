@@ -11,6 +11,7 @@ export function createApp() {
   const app = express();
 
   // Middlewares
+  app.disable('x-powered-by');
   app.use(bodyParser.json());
   app.use(cookieParser());
   app.use(cors());
