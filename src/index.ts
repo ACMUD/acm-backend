@@ -1,9 +1,12 @@
 import 'dotenv/config'; // Load environment Variables in .env file
 import { createServer } from 'http';
 import { createApp } from './app';
+import { createDBConnection } from './services/database';
 
 // Create new Server
 async function initServer() {
+  await createDBConnection();
+
   const app = createApp();
   const server = createServer(app);
 
