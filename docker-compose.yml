@@ -2,7 +2,7 @@ version: '3'
 
 services:
   app:
-    container_name: 'app'
+    container_name: app-server
     restart: always
     build: .
     ports:
@@ -10,20 +10,40 @@ services:
     volumes:
       - ./src:/app/src
     depends_on:
-      - db
+      - pgsql
     links:
-      - db
+      - pgsql
 
-  db:
-    container_name: postgresdb
+  pgsql:
+    container_name: pgsql-server
     image: postgres
     restart: always
+    ports:
+      - 5432:5432
     environment:
       POSTGRES_DB: ${DBNAME}
       POSTGRES_USER: ${DBUSER}
       POSTGRES_PASSWORD: ${DBPASS}
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pg-data:/var/lib/postgresql/data
+
+  # Optional
+  pgadmin:
+    container_name: pgadmin-server
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: acmud@acm.org
+      PGADMIN_DEFAULT_PASSWORD: ${DBPASS}
+    ports:
+      - 8080:80
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      - pgsql
+    links:
+      - pgsql
 
 volumes:
-  pgdata:
+  pg-data:
+  pgadmin-data:
