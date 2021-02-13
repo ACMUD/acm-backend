@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
-import { handleBadRequestError } from 'src/utils/handleError';
+import { handleBadRequestError } from '../../../utils/handleError';
+
 import {
   createAccount,
   verifyAccount,
