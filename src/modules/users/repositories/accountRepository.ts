@@ -1,7 +1,7 @@
 import { EntityRepository, getCustomRepository, Repository } from 'typeorm';
 import { Account } from '../entities/Account';
 
-@EntityRepository()
+@EntityRepository(Account)
 export class AccountRepository extends Repository<Account> {
   findByEmail(email: string) {
     return this.findOne({ email });
