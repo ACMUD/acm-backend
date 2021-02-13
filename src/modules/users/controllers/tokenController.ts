@@ -2,16 +2,31 @@ import { sign, verify } from 'jsonwebtoken';
 import { Account } from '../entities/Account';
 import { authDTO } from '../dtos/authDTO';
 
+const JWT_SECRET = process.env.JWT_SECRET || 'supersecretjwttoken';
+const COOKIE_SECRET = process.env.COOKIE_SECRET || 'supersecretcookiestoken';
+
 async function generateJWT(account: Account) {
-  const SECRET = process.env.JWT_SECRET || 'supersecrettoken';
-  return sign({ accountId: account.id }, SECRET);
+  return sign({ accountId: account.id }, JWT_SECRET, {
+    expiresIn: '15m',
+  });
 }
 
 async function verifyJWT(jwt: string) {
-  const SECRET = process.env.JWT_SECRET || 'supersecrettoken';
-  const auth = verify(jwt, SECRET);
-  if (!auth) throw new Error('Invalid Token');
+  const auth = verify(jwt, JWT_SECRET);
+  if (!auth) throw new Error('Invalid Access Token');
   return auth as authDTO;
 }
 
-export { generateJWT, verifyJWT };
+async function generateRefresh(account: Account) {
+  return sign({ accountId: account.id }, COOKIE_SECRET, {
+    expiresIn: '7d',
+  });
+}
+
+async function verifyRefresh(jwt: string) {
+  const auth = verify(jwt, COOKIE_SECRET);
+  if (!auth) throw new Error('Invalid Refresh Token');
+  return auth as authDTO;
+}
+
+export { generateJWT, verifyJWT, generateRefresh, verifyRefresh };
