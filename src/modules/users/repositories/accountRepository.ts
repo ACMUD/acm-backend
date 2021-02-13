@@ -7,15 +7,13 @@ export class AccountRepository extends Repository<Account> {
     return this.findOne({ email });
   }
 
-  findAssociateProfile(id: string) {
-    return new Promise(async resolve => {
-      const account = await this.findOne({
-        where: { id },
-        relations: ['userProfile'],
-      });
-
-      resolve(account?.userProfile);
+  async findAssociateProfile(id: string) {
+    const account = await this.findOne({
+      where: { id },
+      relations: ['userProfile'],
     });
+
+    return account?.userProfile;
   }
 }
 
