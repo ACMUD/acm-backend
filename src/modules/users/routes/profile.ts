@@ -1,11 +1,11 @@
 import { Request, Response, Router } from 'express';
 import { getMeByAccountId } from '../controllers/profileController';
-import isAuth, { RequestWithUser } from '../middleware/auth';
+import authValidation, { RequestWithUser } from '../middlewares/auth';
 
 const profileRouter = Router();
 
 // MiddleWare
-profileRouter.use(isAuth);
+profileRouter.use(authValidation);
 
 // Routes
 profileRouter.get('/profile', async (req: RequestWithUser, res: Response) => {

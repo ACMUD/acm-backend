@@ -7,7 +7,11 @@ export interface RequestWithUser extends Request {
   user?: authDTO;
 }
 
-async function isAuth(req: RequestWithUser, res: Response, next: NextFunction) {
+async function authValidation(
+  req: RequestWithUser,
+  res: Response,
+  next: NextFunction
+) {
   const authToken = req.headers.authorization;
   if (!authToken) {
     res
@@ -27,4 +31,4 @@ async function isAuth(req: RequestWithUser, res: Response, next: NextFunction) {
   }
 }
 
-export default isAuth;
+export default authValidation;
