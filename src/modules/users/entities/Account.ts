@@ -26,19 +26,15 @@ export class Account {
   @Column({ default: true })
   active: boolean;
 
-  @ManyToMany(() => TypeAccount)
+  @ManyToMany(() => TypeAccount, { cascade: true })
   @JoinTable({
     name: 'user_type_account',
-    joinColumn: {
-      name: 'type_account_id',
-    },
-    inverseJoinColumn: {
-      name: 'user_account_id',
-    },
+    joinColumn: { name: 'type_account_id' },
+    inverseJoinColumn: { name: 'user_account_id' },
   })
   typeAccount: TypeAccount[];
 
-  @OneToOne(() => Profile)
+  @OneToOne(() => Profile, { cascade: true })
   @JoinColumn({ name: 'user_profile_id' })
   userProfile: Profile;
 }
