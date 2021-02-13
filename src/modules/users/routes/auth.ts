@@ -1,9 +1,20 @@
 import { Request, Response, Router } from 'express';
-import { StatusCodes } from 'http-status-codes';
-import { createAccount, verifyAccount } from '../controllers/authController';
-import { generateJWT } from '../controllers/tokenController';
+import { getReasonPhrase, StatusCodes } from 'http-status-codes';
+import { handleBadRequestError } from 'src/utils/handleError';
+import {
+  createAccount,
+  verifyAccount,
+  verifyAccountById,
+} from '../controllers/authController';
+import {
+  generateJWT,
+  generateRefresh,
+  verifyRefresh,
+} from '../controllers/tokenController';
+import { Account } from '../entities/Account';
 
 const authRouter = Router();
+const REFRESH_TOKEN_ID = process.env.REFRESH_TOKEN_ID || 'jid';
 
 authRouter.post('/signup', async (req: Request, res: Response) => {
   try {
@@ -11,17 +22,14 @@ authRouter.post('/signup', async (req: Request, res: Response) => {
     if (!email || !password) throw new Error('Invalid Credentials');
 
     const createdAccount = await createAccount(email, password);
-    const jwt = await generateJWT(createdAccount);
-
-    res.status(StatusCodes.CREATED).send({
-      message: 'The account has been created successfully',
-      accessToken: jwt,
-    });
+    res.status(StatusCodes.CREATED);
+    sendSuccessfullResponse(
+      res,
+      createdAccount,
+      'The account has been created successfully'
+    );
   } catch (error) {
-    console.log(error);
-    res.status(StatusCodes.BAD_REQUEST).send({
-      message: error.message,
-    });
+    handleBadRequestError(res, error);
   }
 });
 
@@ -31,18 +39,46 @@ authRouter.post('/login', async (req: Request, res: Response) => {
     if (!email || !password) throw new Error('Invalid Credentials');
 
     const loggedUSer = await verifyAccount(email, password);
-    const jwt = await generateJWT(loggedUSer);
-
-    res.status(StatusCodes.OK).send({
-      message: 'Successfull Login',
-      accessToken: jwt,
-    });
+    sendSuccessfullResponse(res, loggedUSer, 'Successfull Login');
   } catch (error) {
-    console.log(error);
-    res.status(StatusCodes.BAD_REQUEST).send({
-      message: error.message,
-    });
+    handleBadRequestError(res, error);
   }
 });
+
+authRouter.post('/refresh_token', async (req: Request, res: Response) => {
+  const refreshToken = req.cookies[REFRESH_TOKEN_ID];
+  if (!refreshToken) {
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .send({ message: getReasonPhrase(StatusCodes.UNAUTHORIZED) });
+  }
+
+  try {
+    const { accountId } = await verifyRefresh(refreshToken);
+    const account = await verifyAccountById(accountId);
+    sendSuccessfullResponse(res, account, 'Successfull Generated Token');
+  } catch (error) {
+    handleBadRequestError(res, error);
+  }
+});
+
+async function sendSuccessfullResponse(
+  res: Response,
+  account: Account,
+  message: string
+) {
+  const accessToken = await generateJWT(account);
+  const refreshToken = await generateRefresh(account);
+
+  return res
+    .cookie(REFRESH_TOKEN_ID, refreshToken, {
+      httpOnly: true,
+      path: '/refresh_token',
+    })
+    .send({
+      message,
+      accessToken,
+    });
+}
 
 export { authRouter };

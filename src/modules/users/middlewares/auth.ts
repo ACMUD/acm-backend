@@ -14,10 +14,9 @@ async function authValidation(
 ) {
   const authToken = req.headers.authorization;
   if (!authToken) {
-    res
+    return res
       .status(StatusCodes.UNAUTHORIZED)
       .send({ message: getReasonPhrase(StatusCodes.UNAUTHORIZED) });
-    return;
   }
 
   try {
@@ -25,9 +24,7 @@ async function authValidation(
     req.user = await verifyJWT(token);
     next();
   } catch (error) {
-    res
-      .status(StatusCodes.UNAUTHORIZED)
-      .send({ message: getReasonPhrase(StatusCodes.UNAUTHORIZED) });
+    res.status(StatusCodes.UNAUTHORIZED).send({ message: error.message });
   }
 }
 
