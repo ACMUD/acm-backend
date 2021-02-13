@@ -1,5 +1,6 @@
 import { hash, compare } from 'bcrypt';
 import { accountRepository } from '../repositories/accountRepository';
+import { profileRepository } from '../repositories/profileRepository';
 
 async function createAccount(email: string, password: string) {
   const accountRepo = accountRepository();
@@ -9,11 +10,20 @@ async function createAccount(email: string, password: string) {
 
   const saltRounds = process.env.SALT_ROUNDS || 12;
   const hashedPassword = await hash(password, saltRounds);
-
   const newAccount = accountRepo.create({
     email,
     password: hashedPassword,
   });
+
+  const profileRepo = profileRepository();
+  const profileAssociated = await profileRepo.findOne({ email });
+  if (profileAssociated) {
+    newAccount.userProfile = profileAssociated;
+  } else {
+    const newProfile = profileRepo.create({ email });
+    newAccount.userProfile = newProfile;
+    await profileRepo.save(newProfile);
+  }
 
   return accountRepo.save(newAccount);
 }
