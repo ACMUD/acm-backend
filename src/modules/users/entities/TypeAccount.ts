@@ -1,10 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
 
 @Entity({ name: 'type-account', schema: 'users' })
 export class TypeAccount {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Index()
   @Column({ unique: true })
   name: string;
 

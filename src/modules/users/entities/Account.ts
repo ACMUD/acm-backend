@@ -6,6 +6,7 @@ import {
   JoinColumn,
   ManyToMany,
   JoinTable,
+  Index,
 } from 'typeorm';
 import { Profile } from './Profile';
 import { TypeAccount } from './TypeAccount';
@@ -15,6 +16,7 @@ export class Account {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Index()
   @Column({ length: 320, unique: true })
   email: string;
 

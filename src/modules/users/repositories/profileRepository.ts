@@ -1,6 +1,13 @@
-import { getRepository } from 'typeorm';
+import { EntityRepository, getCustomRepository, Repository } from 'typeorm';
 import { Profile } from '../entities/Profile';
 
+@EntityRepository(Profile)
+export class ProfileRepository extends Repository<Profile> {
+  findByEmail(email: string) {
+    return this.findOne({ email });
+  }
+}
+
 export function profileRepository() {
-  return getRepository(Profile);
+  return getCustomRepository(ProfileRepository);
 }
