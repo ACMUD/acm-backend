@@ -46,4 +46,13 @@ async function verifyAccount(email: string, password: string) {
   return existingAccount;
 }
 
-export { createAccount, verifyAccount };
+async function verifyAccountById(id: string) {
+  const accountRepo = accountRepository();
+
+  const existingAccount = await accountRepo.findOne(id);
+  if (!existingAccount) throw new Error('User Account does not exists');
+
+  return existingAccount;
+}
+
+export { createAccount, verifyAccount, verifyAccountById };
