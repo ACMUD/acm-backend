@@ -1,5 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
+import { handleBadRequestError } from 'src/utils/handleError';
 import {
   createAccount,
   verifyAccount,
@@ -28,7 +29,7 @@ authRouter.post('/signup', async (req: Request, res: Response) => {
       'The account has been created successfully'
     );
   } catch (error) {
-    handleError(res, error);
+    handleBadRequestError(res, error);
   }
 });
 
@@ -40,7 +41,7 @@ authRouter.post('/login', async (req: Request, res: Response) => {
     const loggedUSer = await verifyAccount(email, password);
     sendSuccessfullResponse(res, loggedUSer, 'Successfull Login');
   } catch (error) {
-    handleError(res, error);
+    handleBadRequestError(res, error);
   }
 });
 
@@ -58,7 +59,7 @@ authRouter.post('/refresh_token', async (req: Request, res: Response) => {
     const account = await verifyAccountById(accountId);
     sendSuccessfullResponse(res, account, 'Successfull Generated Token');
   } catch (error) {
-    handleError(res, error);
+    handleBadRequestError(res, error);
   }
 });
 
@@ -79,13 +80,6 @@ async function sendSuccessfullResponse(
       message,
       accessToken,
     });
-}
-
-function handleError(res: Response, error: any) {
-  console.log(error);
-  res.status(StatusCodes.BAD_REQUEST).send({
-    message: error.message,
-  });
 }
 
 export { authRouter };
