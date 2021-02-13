@@ -1,9 +1,12 @@
 import { hash, compare } from 'bcrypt';
 import { accountRepository } from '../repositories/accountRepository';
 import { profileRepository } from '../repositories/profileRepository';
+import { typeAccountRepository } from '../repositories/typeAccountRepository';
 
 async function createAccount(email: string, password: string) {
   const accountRepo = accountRepository();
+  const profileRepo = profileRepository();
+  const typesRepo = typeAccountRepository();
 
   const existingAccount = await accountRepo.findByEmail(email);
   if (existingAccount) throw new Error('User Account already exists');
@@ -15,14 +18,17 @@ async function createAccount(email: string, password: string) {
     password: hashedPassword,
   });
 
-  const profileRepo = profileRepository();
   const profileAssociated = await profileRepo.findByEmail(email);
   if (profileAssociated) {
     newAccount.userProfile = profileAssociated;
   } else {
     const newProfile = profileRepo.create({ email });
     newAccount.userProfile = newProfile;
-    await profileRepo.save(newProfile);
+  }
+
+  const basicTypeAccount = await typesRepo.findByName('basic');
+  if (basicTypeAccount) {
+    newAccount.typeAccount = [basicTypeAccount];
   }
 
   return accountRepo.save(newAccount);
