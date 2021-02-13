@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  Index,
+} from 'typeorm';
 import { Account } from './Account';
 import { Membership } from './Membership';
 
@@ -13,6 +19,7 @@ export class Profile {
   @Column({ length: 100, nullable: true })
   lastName: string;
 
+  @Index()
   @Column({ length: 320, unique: true })
   email: string;
 
