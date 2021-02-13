@@ -7,10 +7,10 @@ export class Profile {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 100 })
+  @Column({ length: 100, nullable: true })
   firstName: string;
 
-  @Column({ length: 100 })
+  @Column({ length: 100, nullable: true })
   lastName: string;
 
   @Column({ length: 320, unique: true })
