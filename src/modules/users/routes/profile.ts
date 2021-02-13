@@ -8,7 +8,7 @@ const profileRouter = Router();
 profileRouter.use(authValidation);
 
 // Routes
-profileRouter.get('/profile', async (req: RequestWithUser, res: Response) => {
+profileRouter.get('/', async (req: RequestWithUser, res: Response) => {
   if (!req.user) throw new Error('No auth provider');
 
   const { accountId } = req.user;
@@ -16,7 +16,7 @@ profileRouter.get('/profile', async (req: RequestWithUser, res: Response) => {
   res.send({ data });
 });
 
-profileRouter.put('/profile', async (req: Request, res: Response) => {
+profileRouter.put('/', async (req: Request, res: Response) => {
   // res.send({ id: req.userId });
 });
 

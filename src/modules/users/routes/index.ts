@@ -4,7 +4,7 @@ import { profileRouter } from './profile';
 
 const usersRouter = Router();
 
-usersRouter.use(authRouter);
-usersRouter.use(profileRouter);
+usersRouter.use('/auth', authRouter);
+usersRouter.use('/profile', profileRouter);
 
 export default usersRouter;
