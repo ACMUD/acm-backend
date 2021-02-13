@@ -46,16 +46,15 @@ authRouter.post('/login', async (req: Request, res: Response) => {
 });
 
 authRouter.post('/refresh_token', async (req: Request, res: Response) => {
-  const token = req.cookies[REFRESH_TOKEN_ID];
-
-  if (!token) {
+  const refreshToken = req.cookies[REFRESH_TOKEN_ID];
+  if (!refreshToken) {
     return res
       .status(StatusCodes.UNAUTHORIZED)
       .send({ message: getReasonPhrase(StatusCodes.UNAUTHORIZED) });
   }
 
   try {
-    const { accountId } = await verifyRefresh(token);
+    const { accountId } = await verifyRefresh(refreshToken);
     const account = await verifyAccountById(accountId);
     sendSuccessfullResponse(res, account, 'Successfull Generated Token');
   } catch (error) {
