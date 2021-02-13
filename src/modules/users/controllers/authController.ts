@@ -5,7 +5,7 @@ import { profileRepository } from '../repositories/profileRepository';
 async function createAccount(email: string, password: string) {
   const accountRepo = accountRepository();
 
-  const existingAccount = await accountRepo.findOne({ email });
+  const existingAccount = await accountRepo.findByEmail(email);
   if (existingAccount) throw new Error('User Account already exists');
 
   const saltRounds = process.env.SALT_ROUNDS || 12;
@@ -16,7 +16,7 @@ async function createAccount(email: string, password: string) {
   });
 
   const profileRepo = profileRepository();
-  const profileAssociated = await profileRepo.findOne({ email });
+  const profileAssociated = await profileRepo.findByEmail(email);
   if (profileAssociated) {
     newAccount.userProfile = profileAssociated;
   } else {
@@ -31,7 +31,7 @@ async function createAccount(email: string, password: string) {
 async function verifyAccount(email: string, password: string) {
   const accountRepo = accountRepository();
 
-  const existingAccount = await accountRepo.findOne({ email });
+  const existingAccount = await accountRepo.findByEmail(email);
   if (!existingAccount) throw new Error('User Account does not exists');
 
   const valid = await compare(password, existingAccount.password);

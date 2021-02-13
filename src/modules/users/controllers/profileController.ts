@@ -8,13 +8,10 @@ async function getMe(id: string) {
 }
 
 async function getMeByAccountId(id: string) {
-  const account = await accountRepository().findOne({
-    where: { id },
-    relations: ['userProfile'],
-  });
+  const profile = await accountRepository().findAssociateProfile(id);
 
-  if (!account) throw new Error('This Account has not exist');
-  return account.userProfile;
+  if (!profile) throw new Error('This Profile has not exist');
+  return profile;
 }
 
 export { getMe, getMeByAccountId };
