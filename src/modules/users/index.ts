@@ -1,3 +1,9 @@
 // Export Routing
-export { default as usersRouter } from './routes';
-export { default as authValidation, RequestWithUser } from './middlewares/auth';
+export { usersRouter } from './routes';
+
+// Export Middleware
+export {
+  authValidation,
+  RequestWithUser,
+  handleAuthError,
+} from './middlewares/auth';
