@@ -4,6 +4,7 @@ import {
   handleBadRequestError,
   handleUnauthorizedError,
 } from '../../../utils/handleError';
+import { addRefreshToken } from '../utils/refreshCookie';
 
 import {
   createAccount,
@@ -65,6 +66,10 @@ authRouter.post('/refresh_token', async (req: Request, res: Response) => {
   }
 });
 
+authRouter.post('/logout', async (req: Request, res: Response) => {
+  addRefreshToken(res, '').send({ message: 'Successfull Logout' });
+});
+
 async function sendSuccessfullResponse(
   res: Response,
   account: Account,
@@ -73,15 +78,10 @@ async function sendSuccessfullResponse(
   const accessToken = await generateJWT(account, account.userProfile);
   const refreshToken = await generateRefresh(account, account.userProfile);
 
-  return res
-    .cookie(REFRESH_TOKEN_ID, refreshToken, {
-      httpOnly: true,
-      path: '/auth/refresh_token',
-    })
-    .send({
-      message,
-      accessToken,
-    });
+  return addRefreshToken(res, refreshToken).send({
+    message,
+    accessToken,
+  });
 }
 
 export { authRouter };
