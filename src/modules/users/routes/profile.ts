@@ -1,10 +1,10 @@
 import { Response, Router } from 'express';
-import { getMe } from '../controllers/profileController';
 import {
   authValidation,
   handleAuthError,
   RequestWithUser,
 } from '../middlewares/auth';
+import { getMe, updateMe } from '../controllers/profileController';
 
 const profileRouter = Router();
 
@@ -17,13 +17,23 @@ profileRouter.get('/', async (req: RequestWithUser, res: Response, next) => {
 
   const { profileId } = req.user;
   const profile = await getMe(profileId);
-  res.send({ profile });
+
+  res.send(profile);
 });
 
 profileRouter.put('/', async (req: RequestWithUser, res: Response) => {
   if (!req.user) return handleAuthError(res);
 
-  // res.send({ id: req.userId });
+  const { profileId } = req.user;
+  const { firstName, lastName, description, udCode } = req.body;
+  await updateMe(profileId, {
+    firstName,
+    lastName,
+    description,
+    udCode,
+  });
+
+  res.send({ message: 'The profile has been updated successfully' });
 });
 
 export { profileRouter };
