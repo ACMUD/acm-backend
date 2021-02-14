@@ -1,5 +1,5 @@
 import { Response, Router } from 'express';
-import { getMeByAccountId } from '../controllers/profileController';
+import { getMe } from '../controllers/profileController';
 import {
   authValidation,
   handleAuthError,
@@ -15,9 +15,9 @@ profileRouter.use(authValidation);
 profileRouter.get('/', async (req: RequestWithUser, res: Response, next) => {
   if (!req.user) return handleAuthError(res);
 
-  const { accountId } = req.user;
-  const data = await getMeByAccountId(accountId);
-  res.send({ data });
+  const { profileId } = req.user;
+  const profile = await getMe(profileId);
+  res.send({ profile });
 });
 
 profileRouter.put('/', async (req: RequestWithUser, res: Response) => {
