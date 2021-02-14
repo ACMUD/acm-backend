@@ -1,10 +1,7 @@
 import { Response, Router } from 'express';
-import {
-  authValidation,
-  handleUnauthorizedError,
-  RequestWithUser,
-} from '../middlewares/auth';
+import { authValidation, RequestWithUser } from '../middlewares/auth';
 import { getMe, updateMe } from '../controllers/profileController';
+import { handleUnauthorizedError } from '../../../utils/handleError';
 
 const profileRouter = Router();
 
