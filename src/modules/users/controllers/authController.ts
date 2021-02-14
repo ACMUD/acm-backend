@@ -37,7 +37,10 @@ async function createAccount(email: string, password: string) {
 async function verifyAccount(email: string, password: string) {
   const accountRepo = accountRepository();
 
-  const existingAccount = await accountRepo.findByEmail(email);
+  const existingAccount = await accountRepo.findOne({
+    where: { email },
+    relations: ['userProfile'],
+  });
   if (!existingAccount) throw new Error('User Account does not exists');
 
   const valid = await compare(password, existingAccount.password);
@@ -46,13 +49,16 @@ async function verifyAccount(email: string, password: string) {
   return existingAccount;
 }
 
-async function verifyAccountById(id: string) {
+async function getAccountById(id: string) {
   const accountRepo = accountRepository();
 
-  const existingAccount = await accountRepo.findOne(id);
+  const existingAccount = await accountRepo.findOne({
+    where: { id },
+    relations: ['userProfile'],
+  });
   if (!existingAccount) throw new Error('User Account does not exists');
 
   return existingAccount;
 }
 
-export { createAccount, verifyAccount, verifyAccountById };
+export { createAccount, verifyAccount, getAccountById };

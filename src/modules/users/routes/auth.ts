@@ -1,11 +1,11 @@
 import { Request, Response, Router } from 'express';
-import { getReasonPhrase, StatusCodes } from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 import { handleBadRequestError } from '../../../utils/handleError';
 
 import {
   createAccount,
   verifyAccount,
-  verifyAccountById,
+  getAccountById,
 } from '../controllers/authController';
 import {
   generateJWT,
@@ -13,6 +13,7 @@ import {
   verifyRefresh,
 } from '../controllers/tokenController';
 import { Account } from '../entities/Account';
+import { handleAuthError } from '../middlewares/auth';
 
 const authRouter = Router();
 const REFRESH_TOKEN_ID = process.env.REFRESH_TOKEN_ID || 'jid';
@@ -49,14 +50,12 @@ authRouter.post('/login', async (req: Request, res: Response) => {
 authRouter.post('/refresh_token', async (req: Request, res: Response) => {
   const refreshToken = req.cookies[REFRESH_TOKEN_ID];
   if (!refreshToken) {
-    return res
-      .status(StatusCodes.UNAUTHORIZED)
-      .send({ message: getReasonPhrase(StatusCodes.UNAUTHORIZED) });
+    return handleAuthError(res);
   }
 
   try {
     const { accountId } = await verifyRefresh(refreshToken);
-    const account = await verifyAccountById(accountId);
+    const account = await getAccountById(accountId);
     sendSuccessfullResponse(res, account, 'Successfull Generated Token');
   } catch (error) {
     handleBadRequestError(res, error);
@@ -68,13 +67,13 @@ async function sendSuccessfullResponse(
   account: Account,
   message: string
 ) {
-  const accessToken = await generateJWT(account);
-  const refreshToken = await generateRefresh(account);
+  const accessToken = await generateJWT(account, account.userProfile);
+  const refreshToken = await generateRefresh(account, account.userProfile);
 
   return res
     .cookie(REFRESH_TOKEN_ID, refreshToken, {
       httpOnly: true,
-      path: '/refresh_token',
+      path: '/auth/refresh_token',
     })
     .send({
       message,
