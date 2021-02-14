@@ -1,14 +1,20 @@
 import { sign, verify } from 'jsonwebtoken';
 import { Account } from '../entities/Account';
+import { Profile } from '../entities/Profile';
 import { authDTO } from '../dtos/authDTO';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretjwttoken';
 const COOKIE_SECRET = process.env.COOKIE_SECRET || 'supersecretcookiestoken';
 
-async function generateJWT(account: Account) {
-  return sign({ accountId: account.id }, JWT_SECRET, {
-    expiresIn: '15m',
-  });
+async function generateJWT(account: Account, profile: Profile) {
+  return sign(
+    {
+      accountId: account.id,
+      profileId: profile.id,
+    },
+    JWT_SECRET,
+    { expiresIn: '15m' }
+  );
 }
 
 async function verifyJWT(jwt: string) {
@@ -18,9 +24,13 @@ async function verifyJWT(jwt: string) {
 }
 
 async function generateRefresh(account: Account) {
-  return sign({ accountId: account.id }, COOKIE_SECRET, {
-    expiresIn: '7d',
-  });
+  return sign(
+    {
+      accountId: account.id,
+    },
+    COOKIE_SECRET,
+    { expiresIn: '7d' }
+  );
 }
 
 async function verifyRefresh(jwt: string) {
