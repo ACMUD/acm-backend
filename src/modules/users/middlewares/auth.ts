@@ -3,7 +3,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { verifyJWT } from '../controllers/tokenController';
 import { authDTO } from '../dtos/authDTO';
 
-export interface RequestWithUser extends Request {
+interface RequestWithUser extends Request {
   user?: authDTO;
 }
 
@@ -13,11 +13,7 @@ async function authValidation(
   next: NextFunction
 ) {
   const authToken = req.headers.authorization;
-  if (!authToken) {
-    return res
-      .status(StatusCodes.UNAUTHORIZED)
-      .send({ message: getReasonPhrase(StatusCodes.UNAUTHORIZED) });
-  }
+  if (!authToken) return handleAuthError(res);
 
   try {
     const token = authToken.split(' ')[1];
@@ -28,4 +24,10 @@ async function authValidation(
   }
 }
 
-export default authValidation;
+function handleAuthError(res: Response) {
+  res
+    .status(StatusCodes.UNAUTHORIZED)
+    .send({ message: getReasonPhrase(StatusCodes.UNAUTHORIZED) });
+}
+
+export { authValidation, RequestWithUser, handleAuthError };

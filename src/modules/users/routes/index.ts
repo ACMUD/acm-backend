@@ -7,4 +7,4 @@ const usersRouter = Router();
 usersRouter.use('/auth', authRouter);
 usersRouter.use('/profile', profileRouter);
 
-export default usersRouter;
+export { usersRouter };
