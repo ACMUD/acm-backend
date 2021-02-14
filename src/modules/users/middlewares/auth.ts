@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
+import { handleUnauthorizedError } from '../../../utils/handleError';
+
 import { verifyJWT } from '../controllers/tokenController';
 import { authDTO } from '../dtos/authDTO';
 
@@ -13,7 +15,7 @@ async function authValidation(
   next: NextFunction
 ) {
   const authToken = req.headers.authorization;
-  if (!authToken) return handleAuthError(res);
+  if (!authToken) return handleUnauthorizedError(res);
 
   try {
     const token = authToken.split(' ')[1];
@@ -24,10 +26,4 @@ async function authValidation(
   }
 }
 
-function handleAuthError(res: Response) {
-  res
-    .status(StatusCodes.UNAUTHORIZED)
-    .send({ message: getReasonPhrase(StatusCodes.UNAUTHORIZED) });
-}
-
-export { authValidation, RequestWithUser, handleAuthError };
+export { authValidation, RequestWithUser };

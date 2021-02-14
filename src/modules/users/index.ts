@@ -2,8 +2,4 @@
 export { usersRouter } from './routes';
 
 // Export Middleware
-export {
-  authValidation,
-  RequestWithUser,
-  handleAuthError,
-} from './middlewares/auth';
+export { authValidation, RequestWithUser } from './middlewares/auth';

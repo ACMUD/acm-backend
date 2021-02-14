@@ -1,6 +1,9 @@
 import { Request, Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { handleBadRequestError } from '../../../utils/handleError';
+import {
+  handleBadRequestError,
+  handleUnauthorizedError,
+} from '../../../utils/handleError';
 
 import {
   createAccount,
@@ -12,8 +15,8 @@ import {
   generateRefresh,
   verifyRefresh,
 } from '../controllers/tokenController';
+
 import { Account } from '../entities/Account';
-import { handleAuthError } from '../middlewares/auth';
 
 const authRouter = Router();
 const REFRESH_TOKEN_ID = process.env.REFRESH_TOKEN_ID || 'jid';
@@ -50,7 +53,7 @@ authRouter.post('/login', async (req: Request, res: Response) => {
 authRouter.post('/refresh_token', async (req: Request, res: Response) => {
   const refreshToken = req.cookies[REFRESH_TOKEN_ID];
   if (!refreshToken) {
-    return handleAuthError(res);
+    return handleUnauthorizedError(res);
   }
 
   try {
