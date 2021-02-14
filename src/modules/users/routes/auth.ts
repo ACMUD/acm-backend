@@ -74,7 +74,7 @@ async function sendSuccessfullResponse(
   return res
     .cookie(REFRESH_TOKEN_ID, refreshToken, {
       httpOnly: true,
-      path: '/refresh_token',
+      path: '/auth/refresh_token',
     })
     .send({
       message,
