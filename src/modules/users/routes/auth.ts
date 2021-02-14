@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import { getReasonPhrase, StatusCodes } from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 import { handleBadRequestError } from '../../../utils/handleError';
 
 import {
@@ -13,6 +13,7 @@ import {
   verifyRefresh,
 } from '../controllers/tokenController';
 import { Account } from '../entities/Account';
+import { handleAuthError } from '../middlewares/auth';
 
 const authRouter = Router();
 const REFRESH_TOKEN_ID = process.env.REFRESH_TOKEN_ID || 'jid';
@@ -49,9 +50,7 @@ authRouter.post('/login', async (req: Request, res: Response) => {
 authRouter.post('/refresh_token', async (req: Request, res: Response) => {
   const refreshToken = req.cookies[REFRESH_TOKEN_ID];
   if (!refreshToken) {
-    return res
-      .status(StatusCodes.UNAUTHORIZED)
-      .send({ message: getReasonPhrase(StatusCodes.UNAUTHORIZED) });
+    return handleAuthError(res);
   }
 
   try {
