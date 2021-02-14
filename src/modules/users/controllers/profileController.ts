@@ -17,7 +17,9 @@ async function updateMe(profileId: string, data: updateProfileDTO) {
     }
   }
 
-  return profileRepository().update(profileId, data);
+  if (Object.keys(data).length > 0) {
+    profileRepository().update(profileId, data);
+  }
 }
 
 export { getMe, updateMe };
