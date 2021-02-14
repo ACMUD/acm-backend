@@ -1,7 +1,7 @@
 import { Response, Router } from 'express';
 import {
   authValidation,
-  handleAuthError,
+  handleUnauthorizedError,
   RequestWithUser,
 } from '../middlewares/auth';
 import { getMe, updateMe } from '../controllers/profileController';
@@ -13,7 +13,7 @@ profileRouter.use(authValidation);
 
 // Routes
 profileRouter.get('/', async (req: RequestWithUser, res: Response, next) => {
-  if (!req.user) return handleAuthError(res);
+  if (!req.user) return handleUnauthorizedError(res);
 
   const { profileId } = req.user;
   const profile = await getMe(profileId);
@@ -22,7 +22,7 @@ profileRouter.get('/', async (req: RequestWithUser, res: Response, next) => {
 });
 
 profileRouter.put('/', async (req: RequestWithUser, res: Response) => {
-  if (!req.user) return handleAuthError(res);
+  if (!req.user) return handleUnauthorizedError(res);
 
   const { profileId } = req.user;
   const { firstName, lastName, description, udCode } = req.body;

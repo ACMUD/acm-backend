@@ -13,7 +13,7 @@ async function authValidation(
   next: NextFunction
 ) {
   const authToken = req.headers.authorization;
-  if (!authToken) return handleAuthError(res);
+  if (!authToken) return handleUnauthorizedError(res);
 
   try {
     const token = authToken.split(' ')[1];
@@ -24,10 +24,10 @@ async function authValidation(
   }
 }
 
-function handleAuthError(res: Response) {
+function handleUnauthorizedError(res: Response) {
   res
     .status(StatusCodes.UNAUTHORIZED)
     .send({ message: getReasonPhrase(StatusCodes.UNAUTHORIZED) });
 }
 
-export { authValidation, RequestWithUser, handleAuthError };
+export { authValidation, RequestWithUser, handleUnauthorizedError };

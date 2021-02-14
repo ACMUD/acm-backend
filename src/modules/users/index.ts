@@ -5,5 +5,5 @@ export { usersRouter } from './routes';
 export {
   authValidation,
   RequestWithUser,
-  handleAuthError,
+  handleUnauthorizedError,
 } from './middlewares/auth';
