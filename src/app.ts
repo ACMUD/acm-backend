@@ -5,6 +5,8 @@ import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 
 import apiRouter from './routes';
+import error404 from './middlewares/error404';
+import errorHandler from './middlewares/errorHandler';
 
 export function createApp() {
   // Create App
@@ -23,6 +25,10 @@ export function createApp() {
 
   // API
   app.use('/', apiRouter);
+
+  // Error Handlers
+  apiRouter.use(error404);
+  apiRouter.use(errorHandler);
 
   // Return new App
   return app;
