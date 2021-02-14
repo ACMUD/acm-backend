@@ -5,7 +5,7 @@ import { handleBadRequestError } from '../../../utils/handleError';
 import {
   createAccount,
   verifyAccount,
-  verifyAccountById,
+  getAccountById,
 } from '../controllers/authController';
 import {
   generateJWT,
@@ -56,7 +56,7 @@ authRouter.post('/refresh_token', async (req: Request, res: Response) => {
 
   try {
     const { accountId } = await verifyRefresh(refreshToken);
-    const account = await verifyAccountById(accountId);
+    const account = await getAccountById(accountId);
     sendSuccessfullResponse(res, account, 'Successfull Generated Token');
   } catch (error) {
     handleBadRequestError(res, error);
@@ -68,8 +68,8 @@ async function sendSuccessfullResponse(
   account: Account,
   message: string
 ) {
-  const accessToken = await generateJWT(account);
-  const refreshToken = await generateRefresh(account);
+  const accessToken = await generateJWT(account, account.userProfile);
+  const refreshToken = await generateRefresh(account, account.userProfile);
 
   return res
     .cookie(REFRESH_TOKEN_ID, refreshToken, {

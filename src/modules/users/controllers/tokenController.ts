@@ -23,10 +23,11 @@ async function verifyJWT(jwt: string) {
   return auth as authDTO;
 }
 
-async function generateRefresh(account: Account) {
+async function generateRefresh(account: Account, profile: Profile) {
   return sign(
     {
       accountId: account.id,
+      profileId: profile.id,
     },
     COOKIE_SECRET,
     { expiresIn: '7d' }
