@@ -19,7 +19,7 @@ authRouter.post('/signup', async (req: Request, res: Response) => {
     const { email, password } = req.body;
     if (!email || !password) throw new Error('Invalid Credentials');
 
-    const response = signup(res, email, password);
+    const response = await signup(res, email, password);
     res.status(StatusCodes.CREATED).send(response);
   } catch (error) {
     handleBadRequestError(res, error);
@@ -31,7 +31,7 @@ authRouter.post('/login', async (req: Request, res: Response) => {
     const { email, password } = req.body;
     if (!email || !password) throw new Error('Invalid Credentials');
 
-    const response = login(res, email, password);
+    const response = await login(res, email, password);
     res.send(response);
   } catch (error) {
     handleBadRequestError(res, error);
@@ -39,7 +39,7 @@ authRouter.post('/login', async (req: Request, res: Response) => {
 });
 
 authRouter.post('/logout', async (req: Request, res: Response) => {
-  const response = logout(res);
+  const response = await logout(res);
   res.send(response);
 });
 
