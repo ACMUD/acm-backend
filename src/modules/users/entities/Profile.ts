@@ -5,31 +5,40 @@ import {
   OneToOne,
   Index,
 } from 'typeorm';
+import { ObjectType, Field } from 'type-graphql';
 import { Account } from './Account';
 import { Membership } from './Membership';
 
+const nullable = true;
+
+@ObjectType()
 @Entity({ name: 'user-profile', schema: 'users' })
 export class Profile {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 100, nullable: true })
+  @Field({ nullable })
+  @Column({ length: 100, nullable })
   firstName: string;
 
-  @Column({ length: 100, nullable: true })
+  @Field({ nullable })
+  @Column({ length: 100, nullable })
   lastName: string;
 
   @Index()
   @Column({ length: 320, unique: true })
   email: string;
 
-  @Column({ name: 'image_url', length: 320, nullable: true })
+  @Field({ nullable })
+  @Column({ name: 'image_url', length: 320, nullable })
   imageUrl: string;
 
-  @Column({ length: 140, nullable: true })
+  @Field({ nullable })
+  @Column({ length: 140, nullable })
   description: string;
 
-  @Column({ name: 'ud_code', length: 11, nullable: true, unique: true })
+  @Field({ nullable })
+  @Column({ name: 'ud_code', length: 11, nullable, unique: true })
   udCode: string;
 
   @OneToOne(() => Account, account => account.userProfile)
