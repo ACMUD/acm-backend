@@ -1,58 +1,32 @@
-import { hash, compare } from 'bcrypt';
-import { accountRepository } from '../repositories/accountRepository';
-import { profileRepository } from '../repositories/profileRepository';
-import { typeAccountRepository } from '../repositories/typeAccountRepository';
+import { Response } from 'express';
+import { createAccount, verifyAccount } from './accountController';
 
-async function createAccount(email: string, password: string) {
-  const accountRepo = accountRepository();
-  const profileRepo = profileRepository();
-  const typesRepo = typeAccountRepository();
+import { addRefreshToken } from '../utils/refreshCookie';
+import { getTokens } from '../utils/asociateTokens';
 
-  const existingAccount = await accountRepo.findByEmail(email);
-  if (existingAccount) throw new Error('User Account already exists');
-
-  const saltRounds = process.env.SALT_ROUNDS || 12;
-  const hashedPassword = await hash(password, saltRounds);
-  const newAccount = accountRepo.create({
-    email,
-    password: hashedPassword,
-  });
-
-  const profileAssociated = await profileRepo.findByEmail(email);
-  if (profileAssociated) {
-    newAccount.userProfile = profileAssociated;
-  } else {
-    const newProfile = profileRepo.create({ email });
-    newAccount.userProfile = newProfile;
-  }
-
-  const basicTypeAccount = await typesRepo.findByName('basic');
-  if (basicTypeAccount) {
-    newAccount.typeAccount = [basicTypeAccount];
-  }
-
-  return accountRepo.save(newAccount);
+async function signup(res: Response, email: string, password: string) {
+  const createdAccount = await createAccount(email, password);
+  const accessToken = await getTokens(res, createdAccount);
+  return {
+    message: 'The account has been created successfully',
+    accessToken,
+  };
 }
 
-async function verifyAccount(email: string, password: string) {
-  const accountRepo = accountRepository();
-
-  const existingAccount = await accountRepo.findByEmailWithProfile(email);
-  if (!existingAccount) throw new Error('User Account does not exists');
-
-  const valid = await compare(password, existingAccount.password);
-  if (!valid) throw new Error('Invalid password');
-
-  return existingAccount;
+async function login(res: Response, email: string, password: string) {
+  const loggedUSer = await verifyAccount(email, password);
+  const accessToken = await getTokens(res, loggedUSer);
+  return {
+    message: 'Successfull Login',
+    accessToken,
+  };
 }
 
-async function getAccountById(id: string) {
-  const accountRepo = accountRepository();
-
-  const existingAccount = await accountRepo.findByIdWithProfile(id);
-  if (!existingAccount) throw new Error('User Account does not exists');
-
-  return existingAccount;
+async function logout(res: Response) {
+  addRefreshToken(res, '');
+  return {
+    message: 'Successfull Logout',
+  };
 }
 
-export { createAccount, verifyAccount, getAccountById };
+export { signup, login, logout };
