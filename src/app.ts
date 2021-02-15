@@ -27,8 +27,8 @@ export function createApp() {
   app.use('/', apiRouter);
 
   // Error Handlers
-  apiRouter.use(error404);
-  apiRouter.use(errorHandler);
+  app.use(error404);
+  app.use(errorHandler);
 
   // Return new App
   return app;
