@@ -23,12 +23,7 @@ profileRouter.put('/', async (req: RequestWithUser, res: Response) => {
 
   const { profileId } = req.user;
   const { firstName, lastName, description, udCode } = req.body;
-  await updateMe(profileId, {
-    firstName,
-    lastName,
-    description,
-    udCode,
-  });
+  await updateMe(profileId, { firstName, lastName, description, udCode });
 
   res.send({ message: 'The profile has been updated successfully' });
 });
