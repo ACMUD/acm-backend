@@ -1,7 +1,11 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-function error404(req: Request, res: Response) {
+const exeptions = ['/graphql'];
+
+function error404(req: Request, res: Response, next: NextFunction) {
+  if (exeptions.includes(req.url)) return next();
+
   res
     .status(StatusCodes.NOT_FOUND)
     .send({ message: getReasonPhrase(StatusCodes.NOT_FOUND) });
