@@ -1,14 +1,10 @@
 import { Request, Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import {
-  createAccount,
-  verifyAccount,
-  getAccountById,
-} from '../controllers/authController';
+import { login, logout, signup } from '../controllers/authController';
+import { getAccountById } from '../controllers/accountController';
 import { verifyRefresh } from '../controllers/tokenController';
 
-import { addRefreshToken } from '../utils/refreshCookie';
 import { getTokens } from '../utils/asociateTokens';
 import {
   handleBadRequestError,
@@ -23,13 +19,8 @@ authRouter.post('/signup', async (req: Request, res: Response) => {
     const { email, password } = req.body;
     if (!email || !password) throw new Error('Invalid Credentials');
 
-    const createdAccount = await createAccount(email, password);
-    const accessToken = await getTokens(res, createdAccount);
-
-    res.status(StatusCodes.CREATED).send({
-      message: 'The account has been created successfully',
-      accessToken,
-    });
+    const response = signup(res, email, password);
+    res.status(StatusCodes.CREATED).send(response);
   } catch (error) {
     handleBadRequestError(res, error);
   }
@@ -40,18 +31,19 @@ authRouter.post('/login', async (req: Request, res: Response) => {
     const { email, password } = req.body;
     if (!email || !password) throw new Error('Invalid Credentials');
 
-    const loggedUSer = await verifyAccount(email, password);
-    const accessToken = await getTokens(res, loggedUSer);
-
-    res.send({
-      message: 'Successfull Login',
-      accessToken,
-    });
+    const response = login(res, email, password);
+    res.send(response);
   } catch (error) {
     handleBadRequestError(res, error);
   }
 });
 
+authRouter.post('/logout', async (req: Request, res: Response) => {
+  const response = logout(res);
+  res.send(response);
+});
+
+// Refresh Token EndPoint
 authRouter.post('/refresh_token', async (req: Request, res: Response) => {
   const refreshToken = req.cookies[REFRESH_TOKEN_ID];
   if (!refreshToken) {
@@ -62,21 +54,15 @@ authRouter.post('/refresh_token', async (req: Request, res: Response) => {
     const { accountId } = await verifyRefresh(refreshToken);
     const account = await getAccountById(accountId);
     const accessToken = await getTokens(res, account);
-
-    res.send({
+    const response = {
       message: 'Successfull Generated Token',
       accessToken,
-    });
+    };
+
+    res.send(response);
   } catch (error) {
     handleBadRequestError(res, error);
   }
-});
-
-authRouter.post('/logout', async (req: Request, res: Response) => {
-  addRefreshToken(res, '');
-  res.send({
-    message: 'Successfull Logout',
-  });
 });
 
 export { authRouter };
