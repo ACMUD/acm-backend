@@ -40,4 +40,14 @@ async function verifyRefresh(jwt: string) {
   return auth as authDTO;
 }
 
-export { generateJWT, verifyJWT, generateRefresh, verifyRefresh };
+async function getTokens(account: Account) {
+  if (!account.userProfile)
+    throw new Error("Account don't have profile associate");
+
+  const accessToken = await generateJWT(account, account.userProfile);
+  const refreshToken = await generateRefresh(account, account.userProfile);
+
+  return [accessToken, refreshToken];
+}
+
+export { generateJWT, verifyJWT, generateRefresh, verifyRefresh, getTokens };
