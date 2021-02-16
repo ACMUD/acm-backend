@@ -1,7 +1,7 @@
 import { sign, verify } from 'jsonwebtoken';
 import { Account } from '../entities/Account';
 import { Profile } from '../entities/Profile';
-import { authDTO } from '../dtos/authDTO';
+import { userTokenDTO } from '../dtos/authDTO';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretjwttoken';
 const COOKIE_SECRET = process.env.COOKIE_SECRET || 'supersecretcookiestoken';
@@ -20,7 +20,7 @@ async function generateJWT(account: Account, profile: Profile) {
 async function verifyJWT(jwt: string) {
   const auth = verify(jwt, JWT_SECRET);
   if (!auth) throw new Error('Invalid Access Token');
-  return auth as authDTO;
+  return auth as userTokenDTO;
 }
 
 async function generateRefresh(account: Account, profile: Profile) {
@@ -37,7 +37,17 @@ async function generateRefresh(account: Account, profile: Profile) {
 async function verifyRefresh(jwt: string) {
   const auth = verify(jwt, COOKIE_SECRET);
   if (!auth) throw new Error('Invalid Refresh Token');
-  return auth as authDTO;
+  return auth as userTokenDTO;
 }
 
-export { generateJWT, verifyJWT, generateRefresh, verifyRefresh };
+async function getTokens(account: Account) {
+  if (!account.userProfile)
+    throw new Error("Account don't have profile associate");
+
+  const accessToken = await generateJWT(account, account.userProfile);
+  const refreshToken = await generateRefresh(account, account.userProfile);
+
+  return [accessToken, refreshToken];
+}
+
+export { generateJWT, verifyJWT, generateRefresh, verifyRefresh, getTokens };
