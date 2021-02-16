@@ -1,32 +1,19 @@
-import { Response } from 'express';
+import { authDTO } from '../dtos/authDTO';
 import { createAccount, verifyAccount } from './accountController';
+import { getTokens } from './tokenController';
 
-import { addRefreshToken } from '../utils/refreshCookie';
-import { getTokens } from '../utils/asociateTokens';
+async function signup({ email, password }: authDTO) {
+  if (!email || !password) throw new Error('Invalid Credentials');
 
-async function signup(res: Response, email: string, password: string) {
   const createdAccount = await createAccount(email, password);
-  const accessToken = await getTokens(res, createdAccount);
-  return {
-    message: 'The account has been created successfully',
-    accessToken,
-  };
+  return getTokens(createdAccount);
 }
 
-async function login(res: Response, email: string, password: string) {
+async function login({ email, password }: authDTO) {
+  if (!email || !password) throw new Error('Invalid Credentials');
+
   const loggedUSer = await verifyAccount(email, password);
-  const accessToken = await getTokens(res, loggedUSer);
-  return {
-    message: 'Successfull Login',
-    accessToken,
-  };
+  return await getTokens(loggedUSer);
 }
 
-async function logout(res: Response) {
-  addRefreshToken(res, '');
-  return {
-    message: 'Successfull Logout',
-  };
-}
-
-export { signup, login, logout };
+export { signup, login };

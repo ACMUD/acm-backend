@@ -3,10 +3,10 @@ import { StatusCodes } from 'http-status-codes';
 import { handleUnauthorizedError } from '../../../utils/handleError';
 
 import { verifyJWT } from '../controllers/tokenController';
-import { authDTO } from '../dtos/authDTO';
+import { userTokenDTO } from '../dtos/authDTO';
 
 interface RequestWithUser extends Request {
-  user?: authDTO;
+  user?: userTokenDTO;
 }
 
 async function authValidation(
