@@ -33,13 +33,12 @@ authRouter.post('/signup', async (req: Request, res: Response) => {
 authRouter.post('/login', async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) throw new Error('Invalid Credentials');
 
     const [accessToken, refreshToken] = await login({ email, password });
     addRefreshToken(res, refreshToken);
 
     res.send({
-      message: 'The account has been created successfully',
+      message: 'Successfully Login',
       accessToken,
     });
   } catch (error) {

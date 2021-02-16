@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { handleUnauthorizedError } from '../../../utils/handleError';
 
 import { verifyJWT } from '../controllers/tokenController';
-import { userTokenDTO } from '../dtos/userTokenDTO';
+import { userTokenDTO } from '../dtos/authDTO';
 
 interface RequestWithUser extends Request {
   user?: userTokenDTO;

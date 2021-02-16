@@ -1,7 +1,7 @@
 import { sign, verify } from 'jsonwebtoken';
 import { Account } from '../entities/Account';
 import { Profile } from '../entities/Profile';
-import { userTokenDTO } from '../dtos/userTokenDTO';
+import { userTokenDTO } from '../dtos/authDTO';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretjwttoken';
 const COOKIE_SECRET = process.env.COOKIE_SECRET || 'supersecretcookiestoken';
