@@ -18,7 +18,7 @@ authRouter.post('/signup', async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
-    const [accessToken, refreshToken] = await signup(email, password);
+    const [accessToken, refreshToken] = await signup({ email, password });
     addRefreshToken(res, refreshToken);
 
     res.status(StatusCodes.CREATED).send({
@@ -35,7 +35,7 @@ authRouter.post('/login', async (req: Request, res: Response) => {
     const { email, password } = req.body;
     if (!email || !password) throw new Error('Invalid Credentials');
 
-    const [accessToken, refreshToken] = await login(email, password);
+    const [accessToken, refreshToken] = await login({ email, password });
     addRefreshToken(res, refreshToken);
 
     res.send({
