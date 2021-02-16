@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { MiddlewareFn, NextFn } from 'type-graphql';
 import { verifyJWT } from '../../controllers/tokenController';
-import { authDTO } from '../../dtos/authDTO';
+import { userTokenDTO } from '../../dtos/authDTO';
 
 interface authContext {
   req: Request;
   res: Response;
-  user?: authDTO;
+  user?: userTokenDTO;
 }
 
 const authValidation: MiddlewareFn<authContext> = async (

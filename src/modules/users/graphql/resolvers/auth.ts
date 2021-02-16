@@ -8,7 +8,8 @@ import {
   InputType,
 } from 'type-graphql';
 import { gqlContext } from '../../../../graphql/context';
-import { signup, login, logout } from '../../controllers/authController';
+import { signup, login } from '../../controllers/authController';
+import { addRefreshToken } from '../../utils/refreshCookie';
 
 @InputType()
 class authInput {
@@ -36,8 +37,13 @@ export class authResolver {
     @Ctx() { res }: gqlContext
   ): Promise<authResponse> {
     const { email, password } = authInput;
-    if (!email || !password) throw new Error('Invalid Credentials');
-    return signup(res, email, password);
+    const [accessToken, refreshToken] = await signup({ email, password });
+    addRefreshToken(res, refreshToken);
+
+    return {
+      message: 'The account has been created successfully',
+      accessToken,
+    };
   }
 
   @Mutation(() => authResponse)
@@ -46,12 +52,20 @@ export class authResolver {
     @Ctx() { res }: gqlContext
   ): Promise<authResponse> {
     const { email, password } = authInput;
-    if (!email || !password) throw new Error('Invalid Credentials');
-    return login(res, email, password);
+    const [accessToken, refreshToken] = await login({ email, password });
+    addRefreshToken(res, refreshToken);
+
+    return {
+      message: 'Successfully Login',
+      accessToken,
+    };
   }
 
   @Mutation(() => authResponse)
   async logout(@Ctx() { res }: gqlContext) {
-    return logout(res);
+    addRefreshToken(res, '');
+    return {
+      message: 'Successfull Logout',
+    };
   }
 }
