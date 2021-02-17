@@ -1,6 +1,9 @@
 import { Router, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { loginWithGoogle, signWithGoogle } from '../controllers/authController';
+import {
+  loginWithGoogle,
+  signWithGoogle,
+} from '../controllers/googleAuthController';
 import { addRefreshToken } from '../utils/refreshCookie';
 import { handleBadRequestError } from '../../../utils/handleError';
 
