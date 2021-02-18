@@ -1,12 +1,4 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  OneToOne,
-  Index,
-} from 'typeorm';
-import { Account } from './Account';
-import { Membership } from './Membership';
+import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
 
 @Entity({ name: 'user-profile', schema: 'users' })
 export class Profile {
@@ -31,10 +23,4 @@ export class Profile {
 
   @Column({ name: 'ud_code', length: 11, nullable: true, unique: true })
   udCode: string;
-
-  @OneToOne(() => Account, account => account.userProfile)
-  account?: Account;
-
-  @OneToOne(() => Membership, membership => membership.userProfile)
-  membership?: Membership;
 }
