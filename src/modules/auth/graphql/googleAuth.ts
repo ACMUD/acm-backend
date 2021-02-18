@@ -1,43 +1,26 @@
-import {
-  Resolver,
-  Mutation,
-  Arg,
-  ObjectType,
-  Field,
-  Ctx,
-  InputType,
-} from 'type-graphql';
+import { Resolver, Mutation, Arg, Field, Ctx, InputType } from 'type-graphql';
 import { gqlContext } from 'graphql/context';
-import { login, signup } from '../controllers/authController';
 import { addRefreshToken } from '../utils/refreshCookie';
-
+import {
+  loginWithGoogle,
+  signWithGoogle,
+} from '../controllers/googleAuthController';
+import { authResponse } from './auth';
 @InputType()
-class authInput {
+class googleAuthInput {
   @Field()
-  email: string;
-
-  @Field()
-  password: string;
-}
-
-@ObjectType()
-export class authResponse {
-  @Field()
-  message: string;
-
-  @Field()
-  accessToken?: string;
+  tokenId: string;
 }
 
 @Resolver()
-export class authResolver {
+export class googleAuthResolver {
   @Mutation(() => authResponse)
-  async register(
-    @Arg('authInput') authInput: authInput,
+  async googleRegister(
+    @Arg('googleAuthInput') googleAuthInput: googleAuthInput,
     @Ctx() { res }: gqlContext
   ): Promise<authResponse> {
-    const { email, password } = authInput;
-    const [accessToken, refreshToken] = await signup({ email, password });
+    const { tokenId } = googleAuthInput;
+    const [accessToken, refreshToken] = await signWithGoogle(tokenId);
     addRefreshToken(res, refreshToken);
 
     return {
@@ -47,12 +30,12 @@ export class authResolver {
   }
 
   @Mutation(() => authResponse)
-  async login(
-    @Arg('authInput') authInput: authInput,
+  async googleLogin(
+    @Arg('googleAuthInput') googleAuthInput: googleAuthInput,
     @Ctx() { res }: gqlContext
   ): Promise<authResponse> {
-    const { email, password } = authInput;
-    const [accessToken, refreshToken] = await login({ email, password });
+    const { tokenId } = googleAuthInput;
+    const [accessToken, refreshToken] = await loginWithGoogle(tokenId);
     addRefreshToken(res, refreshToken);
 
     return {
