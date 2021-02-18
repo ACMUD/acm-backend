@@ -8,6 +8,8 @@ export class updateProfileDTO {
   @Field({ nullable: true })
   lastName?: string;
 
+  imageUrl?: string;
+
   @Field({ nullable: true })
   description?: string;
 

@@ -3,18 +3,20 @@ import { StatusCodes } from 'http-status-codes';
 
 import { login, signup } from '../controllers/authController';
 import { getAccountById } from '../controllers/accountController';
-import { verifyRefresh, getTokens } from '../controllers/tokenController';
 
 import { addRefreshToken } from '../utils/refreshCookie';
+import { verifyRefreshToken } from 'services/jwt';
+import { getTokens } from '../utils/generateTokens';
+
 import {
   handleBadRequestError,
   handleUnauthorizedError,
-} from '../../../utils/handleError';
+} from 'utils/handleError';
 
-const authRouter = Router();
+const basicAuthRouter = Router();
 const REFRESH_TOKEN_ID = process.env.REFRESH_TOKEN_ID || 'jid';
 
-authRouter.post('/signup', async (req: Request, res: Response) => {
+basicAuthRouter.post('/signup', async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
@@ -30,7 +32,7 @@ authRouter.post('/signup', async (req: Request, res: Response) => {
   }
 });
 
-authRouter.post('/login', async (req: Request, res: Response) => {
+basicAuthRouter.post('/login', async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
@@ -46,7 +48,7 @@ authRouter.post('/login', async (req: Request, res: Response) => {
   }
 });
 
-authRouter.post('/logout', async (req: Request, res: Response) => {
+basicAuthRouter.post('/logout', async (req: Request, res: Response) => {
   addRefreshToken(res, '');
   res.send({
     message: 'Successfull Logout',
@@ -54,14 +56,14 @@ authRouter.post('/logout', async (req: Request, res: Response) => {
 });
 
 // Refresh Token EndPoint
-authRouter.post('/refresh_token', async (req: Request, res: Response) => {
+basicAuthRouter.post('/refresh_token', async (req: Request, res: Response) => {
   const token = req.cookies[REFRESH_TOKEN_ID];
   if (!token) {
     return handleUnauthorizedError(res);
   }
 
   try {
-    const { accountId } = await verifyRefresh(token);
+    const { accountId } = await verifyRefreshToken(token);
     const account = await getAccountById(accountId);
     const [accessToken, refreshToken] = await getTokens(account);
     addRefreshToken(res, refreshToken);
@@ -77,4 +79,4 @@ authRouter.post('/refresh_token', async (req: Request, res: Response) => {
   }
 });
 
-export { authRouter };
+export { basicAuthRouter };

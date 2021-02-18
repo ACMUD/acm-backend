@@ -1,11 +1,12 @@
 import { hash, compare } from 'bcrypt';
+import { createBlankProfile, getMeByEmail } from 'modules/users';
+import { authDTO } from '../dtos/authDTO';
+
 import { accountRepository } from '../repositories/accountRepository';
-import { profileRepository } from '../repositories/profileRepository';
 import { typeAccountRepository } from '../repositories/typeAccountRepository';
 
-async function createAccount(email: string, password: string) {
+async function createAccount({ email, password }: authDTO) {
   const accountRepo = accountRepository();
-  const profileRepo = profileRepository();
   const typesRepo = typeAccountRepository();
 
   const existingAccount = await accountRepo.findByEmail(email);
@@ -18,11 +19,11 @@ async function createAccount(email: string, password: string) {
     password: hashedPassword,
   });
 
-  const profileAssociated = await profileRepo.findByEmail(email);
+  const profileAssociated = await getMeByEmail(email);
   if (profileAssociated) {
     newAccount.userProfile = profileAssociated;
   } else {
-    const newProfile = profileRepo.create({ email });
+    const newProfile = await createBlankProfile({ email });
     newAccount.userProfile = newProfile;
   }
 
@@ -34,7 +35,7 @@ async function createAccount(email: string, password: string) {
   return accountRepo.save(newAccount);
 }
 
-async function verifyAccount(email: string, password: string) {
+async function verifyAccount({ email, password }: authDTO) {
   const accountRepo = accountRepository();
 
   const existingAccount = await accountRepo.findByEmailWithProfile(email);
@@ -55,4 +56,13 @@ async function getAccountById(id: string) {
   return existingAccount;
 }
 
-export { createAccount, verifyAccount, getAccountById };
+async function getAccountByEmail(email: string) {
+  const accountRepo = accountRepository();
+
+  const existingAccount = await accountRepo.findByEmailWithProfile(email);
+  if (!existingAccount) throw new Error('User Account does not exists');
+
+  return existingAccount;
+}
+
+export { createAccount, verifyAccount, getAccountById, getAccountByEmail };

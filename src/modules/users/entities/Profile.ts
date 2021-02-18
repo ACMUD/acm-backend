@@ -1,13 +1,5 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  OneToOne,
-  Index,
-} from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
-import { Account } from './Account';
-import { Membership } from './Membership';
+import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
 
 const nullable = true;
 
@@ -40,10 +32,4 @@ export class Profile {
   @Field({ nullable })
   @Column({ name: 'ud_code', length: 11, nullable, unique: true })
   udCode: string;
-
-  @OneToOne(() => Account, account => account.userProfile)
-  account?: Account;
-
-  @OneToOne(() => Membership, membership => membership.userProfile)
-  membership?: Membership;
 }
