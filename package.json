@@ -9,8 +9,8 @@
     "format": "prettier --write ./src",
     "build": "npm run clean && tsc",
     "prestart": "npm run build",
-    "start": "node .",
-    "start:dev": "nodemon src/index.ts"
+    "start": "NODE_PATH=./dist node .",
+    "start:dev": "NODE_PATH=./src nodemon src/index.ts"
   },
   "repository": {
     "type": "git",

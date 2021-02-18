@@ -1,9 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { handleUnauthorizedError } from '../../../utils/handleError';
-
-import { verifyJWT } from '../controllers/tokenController';
-import { userTokenDTO } from '../dtos/authDTO';
+import { verifyAccessToken, userTokenDTO } from 'services/jwt';
+import { handleUnauthorizedError } from 'utils/handleError';
 
 interface RequestWithUser extends Request {
   user?: userTokenDTO;
@@ -19,7 +17,7 @@ async function authValidation(
 
   try {
     const token = authToken.split(' ')[1];
-    req.user = await verifyJWT(token);
+    req.user = await verifyAccessToken(token);
     next();
   } catch (error) {
     res.status(StatusCodes.UNAUTHORIZED).send({ message: error.message });

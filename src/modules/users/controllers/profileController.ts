@@ -1,5 +1,22 @@
 import { updateProfileDTO } from '../dtos/profileDTO';
+import { Profile } from '../entities/Profile';
 import { profileRepository } from '../repositories/profileRepository';
+
+async function createBlankProfile({ email }: Partial<Profile>) {
+  const profileRepo = profileRepository();
+
+  const existingProfile = await profileRepo.findByEmail(email!);
+  if (existingProfile) throw new Error('User Profile already exists');
+
+  return profileRepo.create({ email });
+}
+
+async function getMeByEmail(email: string) {
+  const profile = await profileRepository().findByEmail(email);
+  if (!profile) throw new Error('This Profile has not exist');
+
+  return profile;
+}
 
 async function getMe(id: string) {
   const profile = await profileRepository().findOne(id);
@@ -22,4 +39,4 @@ async function updateMe(profileId: string, data: updateProfileDTO) {
   }
 }
 
-export { getMe, updateMe };
+export { createBlankProfile, getMe, getMeByEmail, updateMe };
