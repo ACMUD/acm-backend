@@ -55,4 +55,13 @@ async function getAccountById(id: string) {
   return existingAccount;
 }
 
-export { createAccount, verifyAccount, getAccountById };
+async function getAccountByEmail(email: string) {
+  const accountRepo = accountRepository();
+
+  const existingAccount = await accountRepo.findByEmailWithProfile(email);
+  if (!existingAccount) throw new Error('User Account does not exists');
+
+  return existingAccount;
+}
+
+export { createAccount, verifyAccount, getAccountById, getAccountByEmail };
