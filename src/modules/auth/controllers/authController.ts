@@ -1,19 +1,25 @@
 import { authDTO } from '../dtos/authDTO';
+import { getTokens } from '../utils/generateTokens';
 import { createAccount, verifyAccount } from './accountController';
-import { getTokens } from './tokenController';
 
 async function signup({ email, password }: authDTO) {
   if (!email || !password) throw new Error('Invalid Credentials');
 
-  const createdAccount = await createAccount(email, password);
+  const createdAccount = await createAccount({
+    email: email.trim().toLowerCase(),
+    password,
+  });
   return getTokens(createdAccount);
 }
 
 async function login({ email, password }: authDTO) {
   if (!email || !password) throw new Error('Invalid Credentials');
 
-  const loggedUSer = await verifyAccount(email, password);
-  return await getTokens(loggedUSer);
+  const loggedUSer = await verifyAccount({
+    email: email.trim().toLowerCase(),
+    password,
+  });
+  return getTokens(loggedUSer);
 }
 
 export { signup, login };

@@ -5,7 +5,7 @@ import {
   signWithGoogle,
 } from '../controllers/googleAuthController';
 import { addRefreshToken } from '../utils/refreshCookie';
-import { handleBadRequestError } from '../../../utils/handleError';
+import { handleBadRequestError } from 'utils/handleError';
 
 const googleAuthRouter = Router();
 

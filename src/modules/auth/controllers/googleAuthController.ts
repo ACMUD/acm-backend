@@ -1,7 +1,8 @@
 import { OAuth2Client } from 'google-auth-library';
+import { updateMe } from 'modules/users';
+import { getTokens } from '../utils/generateTokens';
+
 import { createAccount, getAccountByEmail } from './accountController';
-import { updateMe } from './profileController';
-import { getTokens } from './tokenController';
 
 const googleID =
   process.env.CLIENT_ID ||
@@ -15,7 +16,10 @@ async function signWithGoogle(idToken: string) {
   });
   const { given_name, family_name, email, picture } = ticket.getPayload()!;
   const randomPassword = ''; //randomPassword();
-  const createdAccount = await createAccount(email!, randomPassword);
+  const createdAccount = await createAccount({
+    email: email!,
+    password: randomPassword,
+  });
 
   const { id } = createdAccount.userProfile;
   await updateMe(`${id}`, {
@@ -24,7 +28,7 @@ async function signWithGoogle(idToken: string) {
     imageUrl: picture,
   });
 
-  return await getTokens(createdAccount);
+  return getTokens(createdAccount);
 }
 
 async function loginWithGoogle(idToken: string) {
@@ -35,7 +39,7 @@ async function loginWithGoogle(idToken: string) {
   const { email } = ticket.getPayload()!;
   const existingAccount = await getAccountByEmail(email!);
 
-  return await getTokens(existingAccount);
+  return getTokens(existingAccount);
 }
 
 export { loginWithGoogle, signWithGoogle };
