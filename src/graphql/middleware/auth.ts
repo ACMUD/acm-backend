@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { MiddlewareFn, NextFn } from 'type-graphql';
-import { verifyJWT } from '../../controllers/tokenController';
-import { userTokenDTO } from '../../dtos/authDTO';
+import { userTokenDTO, verifyAccessToken } from 'services/jwt';
 
 interface authContext {
   req: Request;
@@ -21,7 +20,7 @@ const authValidation: MiddlewareFn<authContext> = async (
 
   try {
     const token = authToken.split(' ')[1];
-    context.user = await verifyJWT(token);
+    context.user = await verifyAccessToken(token);
   } catch (error) {
     console.log(error);
     throw new Error('not authenticated');

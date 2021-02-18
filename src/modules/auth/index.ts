@@ -6,3 +6,6 @@ export {
 
 // Export Routing
 export { authRouter } from './routes';
+
+// Export GraphQl Resolvers
+export { authResolver } from './graphql/auth';

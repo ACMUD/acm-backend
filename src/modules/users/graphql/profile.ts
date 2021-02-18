@@ -8,11 +8,10 @@ import {
   ObjectType,
   Field,
 } from 'type-graphql';
-import { authValidation, authContext } from '../middleware/auth';
-
-import { getMe, updateMe } from '../../controllers/profileController';
-import { Profile } from '../../entities/Profile';
-import { updateProfileDTO } from '../../dtos/profileDTO';
+import { authValidation, authContext } from 'graphql/middleware/auth';
+import { Profile } from '../entities/Profile';
+import { getMe, updateMe } from '../controllers/profileController';
+import { updateProfileDTO } from '../dtos/profileDTO';
 
 @ObjectType()
 class generalResponse {

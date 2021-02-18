@@ -7,9 +7,9 @@ import {
   Ctx,
   InputType,
 } from 'type-graphql';
-import { gqlContext } from '../../../../graphql/context';
-import { signup, login } from '../../controllers/authController';
-import { addRefreshToken } from '../../utils/refreshCookie';
+import { gqlContext } from 'graphql/context';
+import { login, signup } from '../controllers/authController';
+import { addRefreshToken } from '../utils/refreshCookie';
 
 @InputType()
 class authInput {

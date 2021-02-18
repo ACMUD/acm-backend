@@ -1,5 +1,6 @@
-import { usersResolvers } from '../modules/users';
+import { authResolver } from 'modules/auth';
+import { profileResolver } from 'modules/users';
 
-const resolvers: Function[] = [...usersResolvers];
+const resolvers: Function[] = [authResolver, profileResolver];
 
 export { resolvers };
