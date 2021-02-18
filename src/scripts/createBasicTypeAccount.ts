@@ -1,4 +1,4 @@
-import { typeAccountRepository } from '../modules/users/repositories/typeAccountRepository';
+import { typeAccountRepository } from 'modules/auth/repositories/typeAccountRepository';
 import { createDBConnection } from '../services/database';
 
 async function createTypeAccounts() {
