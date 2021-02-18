@@ -3,10 +3,12 @@ import { Profile } from '../entities/Profile';
 import { profileRepository } from '../repositories/profileRepository';
 
 async function createBlankProfile({ email }: Partial<Profile>) {
-  const profile = await profileRepository().create({ email });
-  if (!profile) throw new Error('This Profile already exists');
+  const profileRepo = profileRepository();
 
-  return profile;
+  const existingProfile = await profileRepo.findByEmail(email!);
+  if (existingProfile) throw new Error('User Profile already exists');
+
+  return profileRepo.create({ email });
 }
 
 async function getMeByEmail(email: string) {
