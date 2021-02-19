@@ -3,7 +3,11 @@ import { OAuth2Client } from 'google-auth-library';
 import { updateMe } from 'modules/users';
 import { getTokens } from '../utils/generateTokens';
 
-import { createAccount, getAccountByEmail } from './accountController';
+import {
+  activeAccount,
+  createAccount,
+  getAccountByEmail,
+} from './accountController';
 
 const googleID =
   process.env.CLIENT_ID ||
@@ -31,6 +35,7 @@ async function signWithGoogle(idToken: string) {
     imageUrl: picture,
   });
 
+  await activeAccount(email!, randomToken);
   return getTokens(createdAccount);
 }
 

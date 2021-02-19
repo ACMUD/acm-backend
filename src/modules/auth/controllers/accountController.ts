@@ -55,6 +55,21 @@ async function verifyAccount({ email, password }: authDTO) {
   return existingAccount;
 }
 
+async function activeAccount(email: string, verifyToken: string) {
+  const accountRepo = accountRepository();
+
+  const existingAccount = await accountRepo.findByEmailWithProfile(email);
+  if (!existingAccount) throw new Error('User Account does not exists');
+
+  if (existingAccount.verifyToken !== verifyToken)
+    throw new Error('Invalid verify Token');
+
+  existingAccount.active = true;
+  existingAccount.verifyToken = null;
+
+  return accountRepo.save(existingAccount);
+}
+
 async function getAccountById(id: string) {
   const accountRepo = accountRepository();
 
@@ -73,4 +88,10 @@ async function getAccountByEmail(email: string) {
   return existingAccount;
 }
 
-export { createAccount, verifyAccount, getAccountById, getAccountByEmail };
+export {
+  createAccount,
+  verifyAccount,
+  getAccountById,
+  getAccountByEmail,
+  activeAccount,
+};
