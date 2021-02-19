@@ -28,7 +28,7 @@ export class Account {
   active: boolean;
 
   @Column({ nullable: true })
-  verifyToken: string | null;
+  verifyToken: string;
 
   @ManyToMany(() => TypeAccount, { cascade: true })
   @JoinTable({

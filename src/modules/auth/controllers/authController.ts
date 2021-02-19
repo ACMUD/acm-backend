@@ -8,7 +8,7 @@ import {
 
 import { randomBytes } from 'crypto';
 import { sendMail } from 'services/emailSender';
-import { sign, verify } from 'jsonwebtoken';
+import { generateEmailToken, verifyEmailToken } from 'services/jwt';
 
 async function signup({ email, password }: authDTO, verifyAccountUrl?: string) {
   if (!email || !password) throw new Error('Invalid Credentials');
@@ -20,7 +20,7 @@ async function signup({ email, password }: authDTO, verifyAccountUrl?: string) {
     verifyToken,
   });
 
-  const emailToken = sign({ email, verifyToken }, '', { expiresIn: '30m' });
+  const emailToken = await generateEmailToken({ email, verifyToken });
   const verifyUrl = `${verifyAccountUrl}${emailToken}`;
   sendMail({
     to: email,
@@ -38,8 +38,8 @@ async function signup({ email, password }: authDTO, verifyAccountUrl?: string) {
 }
 
 async function verifySingup(emailToken: string) {
-  const payload = verify(emailToken, '');
-  if (!payload) throw new Error('Erro with tokaen');
+  const payload = await verifyEmailToken(emailToken);
+  if (!payload) throw new Error('Erro with token');
 
   const { email, verifyToken } = payload as any;
   const account = await activeAccount(email, verifyToken);

@@ -65,7 +65,7 @@ async function activeAccount(email: string, verifyToken: string) {
     throw new Error('Invalid verify Token');
 
   existingAccount.active = true;
-  existingAccount.verifyToken = null;
+  existingAccount.verifyToken = '';
 
   return accountRepo.save(existingAccount);
 }
