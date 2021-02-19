@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { login, signup } from '../controllers/authController';
+import { login, signup, verifySingup } from '../controllers/authController';
 import { getAccountById } from '../controllers/accountController';
 
 import { addRefreshToken } from '../utils/refreshCookie';
@@ -18,14 +18,13 @@ const REFRESH_TOKEN_ID = process.env.REFRESH_TOKEN_ID || 'jid';
 
 basicAuthRouter.post('/signup', async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, verifyPath = '' } = req.body;
 
-    const [accessToken, refreshToken] = await signup({ email, password });
-    addRefreshToken(res, refreshToken);
+    const verifyURL = `https://${req.headers.host}/${verifyPath}`;
+    await signup({ email, password }, verifyURL);
 
     res.status(StatusCodes.CREATED).send({
       message: 'The account has been created successfully',
-      accessToken,
     });
   } catch (error) {
     handleBadRequestError(res, error);
