@@ -2,10 +2,12 @@ import 'dotenv/config'; // Load environment Variables in .env file
 import { createServer } from 'http';
 import { createApp } from './app';
 import { createDBConnection } from './services/database';
+import { createEmailTransporter } from 'services/emailSender';
 
 // Create new Server
 async function initServer() {
   await createDBConnection();
+  await createEmailTransporter();
 
   const app = createApp();
   const server = createServer(app);
@@ -17,4 +19,7 @@ async function initServer() {
   });
 }
 
-initServer();
+initServer().catch(error => {
+  console.log(error);
+  process.exit();
+});
