@@ -31,6 +31,22 @@ basicAuthRouter.post('/signup', async (req: Request, res: Response) => {
   }
 });
 
+basicAuthRouter.post('/verify', async (req: Request, res: Response) => {
+  try {
+    const { verifyToken } = req.body;
+
+    const [accessToken, refreshToken] = await verifySingup(verifyToken);
+    addRefreshToken(res, refreshToken);
+
+    res.send({
+      message: 'Successful account verification',
+      accessToken,
+    });
+  } catch (error) {
+    handleBadRequestError(res, error);
+  }
+});
+
 basicAuthRouter.post('/login', async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;

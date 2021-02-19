@@ -37,6 +37,15 @@ async function signup({ email, password }: authDTO, verifyAccountUrl?: string) {
   });
 }
 
+async function verifySingup(emailToken: string) {
+  const payload = verify(emailToken, '');
+  if (!payload) throw new Error('Erro with tokaen');
+
+  const { email, verifyToken } = payload as any;
+  const account = await activeAccount(email, verifyToken);
+  return getTokens(account);
+}
+
 async function login({ email, password }: authDTO) {
   if (!email || !password) throw new Error('Invalid Credentials');
 
@@ -47,4 +56,4 @@ async function login({ email, password }: authDTO) {
   return getTokens(loggedUSer);
 }
 
-export { signup, login };
+export { signup, login, verifySingup };
