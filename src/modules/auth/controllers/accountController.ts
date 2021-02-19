@@ -1,11 +1,15 @@
 import { hash, compare } from 'bcrypt';
 import { createBlankProfile, getMeByEmail } from 'modules/users';
-import { authDTO } from '../dtos/authDTO';
+import { authDTO, createAccountDTO } from '../dtos/authDTO';
 
 import { accountRepository } from '../repositories/accountRepository';
 import { typeAccountRepository } from '../repositories/typeAccountRepository';
 
-async function createAccount({ email, password }: authDTO) {
+async function createAccount({
+  email,
+  password,
+  verifyToken,
+}: createAccountDTO) {
   const accountRepo = accountRepository();
   const typesRepo = typeAccountRepository();
 
@@ -17,6 +21,7 @@ async function createAccount({ email, password }: authDTO) {
   const newAccount = accountRepo.create({
     email,
     password: hashedPassword,
+    verifyToken,
   });
 
   const profileAssociated = await getMeByEmail(email);
@@ -43,6 +48,9 @@ async function verifyAccount({ email, password }: authDTO) {
 
   const valid = await compare(password, existingAccount.password);
   if (!valid) throw new Error('Invalid password');
+
+  if (!existingAccount.active)
+    throw new Error('The account has not been activated');
 
   return existingAccount;
 }

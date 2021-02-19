@@ -24,8 +24,11 @@ export class Account {
   @Column()
   password: string;
 
-  @Column({ default: true })
+  @Column({ default: false })
   active: boolean;
+
+  @Column({ nullable: true })
+  verifyToken: string | null;
 
   @ManyToMany(() => TypeAccount, { cascade: true })
   @JoinTable({

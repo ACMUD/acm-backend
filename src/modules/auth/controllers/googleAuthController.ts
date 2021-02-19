@@ -1,3 +1,4 @@
+import { randomBytes } from 'crypto';
 import { OAuth2Client } from 'google-auth-library';
 import { updateMe } from 'modules/users';
 import { getTokens } from '../utils/generateTokens';
@@ -15,10 +16,12 @@ async function signWithGoogle(idToken: string) {
     idToken,
   });
   const { given_name, family_name, email, picture } = ticket.getPayload()!;
-  const randomPassword = ''; //randomPassword();
+  const randomPassword = randomBytes(20).toString('hex');
+  const randomToken = randomBytes(20).toString('hex');
   const createdAccount = await createAccount({
     email: email!,
     password: randomPassword,
+    verifyToken: randomToken,
   });
 
   const { id } = createdAccount.userProfile;

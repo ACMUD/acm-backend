@@ -1,15 +1,40 @@
 import { authDTO } from '../dtos/authDTO';
 import { getTokens } from '../utils/generateTokens';
-import { createAccount, verifyAccount } from './accountController';
+import {
+  activeAccount,
+  createAccount,
+  verifyAccount,
+} from './accountController';
 
-async function signup({ email, password }: authDTO) {
+import { randomBytes } from 'crypto';
+import { sendMail } from 'services/emailSender';
+import { sign, verify } from 'jsonwebtoken';
+
+async function signup({ email, password }: authDTO, verifyAccountUrl?: string) {
   if (!email || !password) throw new Error('Invalid Credentials');
 
-  const createdAccount = await createAccount({
+  const verifyToken = randomBytes(20).toString('hex');
+  await createAccount({
     email: email.trim().toLowerCase(),
     password,
+    verifyToken,
   });
-  return getTokens(createdAccount);
+
+  const emailToken = sign({ email, verifyToken }, '', { expiresIn: '30m' });
+  const verifyUrl = `${verifyAccountUrl}${emailToken}`;
+  sendMail({
+    to: email,
+    subject: 'ACMUD - Verify Account',
+    html: `
+      <h1>Hello</h1>
+      <p>Please verify your account by clicking the link:</p>
+      <div>
+        <a href="${verifyUrl}">${verifyUrl}</a>
+      </div>
+      <br><br>
+      <p>Thank You!</p>
+    `,
+  });
 }
 
 async function login({ email, password }: authDTO) {
