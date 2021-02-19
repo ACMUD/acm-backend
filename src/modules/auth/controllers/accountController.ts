@@ -24,10 +24,10 @@ async function createAccount({
     verifyToken,
   });
 
-  const profileAssociated = await getMeByEmail(email);
-  if (profileAssociated) {
+  try {
+    const profileAssociated = await getMeByEmail(email);
     newAccount.userProfile = profileAssociated;
-  } else {
+  } catch (err) {
     const newProfile = await createBlankProfile({ email });
     newAccount.userProfile = newProfile;
   }
