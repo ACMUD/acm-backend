@@ -1,11 +1,15 @@
 import { hash, compare } from 'bcrypt';
 import { createBlankProfile, getMeByEmail } from 'modules/users';
-import { authDTO } from '../dtos/authDTO';
+import { authDTO, createAccountDTO } from '../dtos/authDTO';
 
 import { accountRepository } from '../repositories/accountRepository';
 import { typeAccountRepository } from '../repositories/typeAccountRepository';
 
-async function createAccount({ email, password }: authDTO) {
+async function createAccount({
+  email,
+  password,
+  verifyToken,
+}: createAccountDTO) {
   const accountRepo = accountRepository();
   const typesRepo = typeAccountRepository();
 
@@ -17,12 +21,13 @@ async function createAccount({ email, password }: authDTO) {
   const newAccount = accountRepo.create({
     email,
     password: hashedPassword,
+    verifyToken,
   });
 
-  const profileAssociated = await getMeByEmail(email);
-  if (profileAssociated) {
+  try {
+    const profileAssociated = await getMeByEmail(email);
     newAccount.userProfile = profileAssociated;
-  } else {
+  } catch (err) {
     const newProfile = await createBlankProfile({ email });
     newAccount.userProfile = newProfile;
   }
@@ -44,7 +49,25 @@ async function verifyAccount({ email, password }: authDTO) {
   const valid = await compare(password, existingAccount.password);
   if (!valid) throw new Error('Invalid password');
 
+  if (!existingAccount.active)
+    throw new Error('The account has not been activated');
+
   return existingAccount;
+}
+
+async function activeAccount(email: string, verifyToken: string) {
+  const accountRepo = accountRepository();
+
+  const existingAccount = await accountRepo.findByEmailWithProfile(email);
+  if (!existingAccount) throw new Error('User Account does not exists');
+
+  if (existingAccount.verifyToken !== verifyToken)
+    throw new Error('Invalid verify Token');
+
+  existingAccount.active = true;
+  existingAccount.verifyToken = '';
+
+  return accountRepo.save(existingAccount);
 }
 
 async function getAccountById(id: string) {
@@ -65,4 +88,10 @@ async function getAccountByEmail(email: string) {
   return existingAccount;
 }
 
-export { createAccount, verifyAccount, getAccountById, getAccountByEmail };
+export {
+  createAccount,
+  verifyAccount,
+  getAccountById,
+  getAccountByEmail,
+  activeAccount,
+};

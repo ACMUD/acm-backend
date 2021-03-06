@@ -2,6 +2,7 @@ import { sign, verify } from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretjwttoken';
 const COOKIE_SECRET = process.env.COOKIE_SECRET || 'supersecretcookiestoken';
+const EMAIL_SECRET = process.env.EMAIL_SECRET || 'supersecretemailtoken';
 
 export interface userTokenDTO {
   accountId: string;
@@ -29,9 +30,21 @@ async function verifyRefreshToken(jwt: string) {
   return auth as userTokenDTO;
 }
 
+async function generateEmailToken(payload: any) {
+  return sign(payload, EMAIL_SECRET);
+}
+
+async function verifyEmailToken(jwt: string) {
+  const emailPayload = verify(jwt, EMAIL_SECRET);
+  if (!emailPayload) throw new Error('Invalid Email Token');
+  return emailPayload as any;
+}
+
 export {
   generateAccessToken,
   verifyAccessToken,
   generateRefreshToken,
   verifyRefreshToken,
+  generateEmailToken,
+  verifyEmailToken,
 };

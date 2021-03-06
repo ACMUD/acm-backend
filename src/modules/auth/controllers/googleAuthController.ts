@@ -1,8 +1,13 @@
+import { randomBytes } from 'crypto';
 import { OAuth2Client } from 'google-auth-library';
 import { updateMe } from 'modules/users';
 import { getTokens } from '../utils/generateTokens';
 
-import { createAccount, getAccountByEmail } from './accountController';
+import {
+  activeAccount,
+  createAccount,
+  getAccountByEmail,
+} from './accountController';
 
 const googleID =
   process.env.CLIENT_ID ||
@@ -15,10 +20,12 @@ async function signWithGoogle(idToken: string) {
     idToken,
   });
   const { given_name, family_name, email, picture } = ticket.getPayload()!;
-  const randomPassword = ''; //randomPassword();
+  const randomPassword = randomBytes(20).toString('hex');
+  const randomToken = randomBytes(20).toString('hex');
   const createdAccount = await createAccount({
     email: email!,
     password: randomPassword,
+    verifyToken: randomToken,
   });
 
   const { id } = createdAccount.userProfile;
@@ -28,6 +35,7 @@ async function signWithGoogle(idToken: string) {
     imageUrl: picture,
   });
 
+  await activeAccount(email!, randomToken);
   return getTokens(createdAccount);
 }
 
