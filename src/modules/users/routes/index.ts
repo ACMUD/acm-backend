@@ -3,6 +3,6 @@ import { profileRouter } from './profile';
 
 const usersRouter = Router();
 
-usersRouter.use('/profile', profileRouter);
+usersRouter.use('/', profileRouter);
 
 export { usersRouter };
