@@ -3,7 +3,6 @@ import { createBlankProfile, getMeByEmail } from 'modules/users';
 import { authDTO, createAccountDTO } from '../dtos/authDTO';
 
 import { accountRepository } from '../repositories/accountRepository';
-import { typeAccountRepository } from '../repositories/typeAccountRepository';
 
 async function createAccount({
   email,
@@ -11,7 +10,6 @@ async function createAccount({
   verifyToken,
 }: createAccountDTO) {
   const accountRepo = accountRepository();
-  const typesRepo = typeAccountRepository();
 
   const existingAccount = await accountRepo.findByEmail(email);
   if (existingAccount) throw new Error('User Account already exists');
@@ -30,11 +28,6 @@ async function createAccount({
   } catch (err) {
     const newProfile = await createBlankProfile({ email });
     newAccount.userProfile = newProfile;
-  }
-
-  const basicTypeAccount = await typesRepo.findByName('basic');
-  if (basicTypeAccount) {
-    newAccount.typeAccount = [basicTypeAccount];
   }
 
   return accountRepo.save(newAccount);
