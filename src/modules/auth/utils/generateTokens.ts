@@ -12,6 +12,7 @@ export async function getTokens(acount: Account) {
   const payload: userTokenDTO = {
     accountId: `${acount.id}`,
     profileId: `${acount.userProfile?.id}`,
+    roles: acount.typeAccount?.map(t => t.name) || [],
   };
 
   const accessToken = await generateAccessToken(payload);
