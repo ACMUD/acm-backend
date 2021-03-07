@@ -12,10 +12,6 @@ async function createTypeAccounts() {
 
     await typesRepo.insert([
       {
-        name: 'basic',
-        description: 'basic access permissions to profile data',
-      },
-      {
         name: 'admin',
         description: 'all access granted',
       },
