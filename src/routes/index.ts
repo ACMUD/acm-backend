@@ -7,6 +7,6 @@ const apiRouter = Router();
 
 // Add API Routes
 apiRouter.use('/auth', authRouter);
-apiRouter.use('/user', usersRouter);
+apiRouter.use('/users', usersRouter);
 
 export default apiRouter;

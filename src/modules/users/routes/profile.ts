@@ -12,7 +12,6 @@ profileRouter.use(authValidation);
 profileRouter.get('/', async (req: RequestWithUser, res: Response, next) => {
   const { profileId } = req.user!;
   const profile = await getMe(profileId);
-
   res.send(profile);
 });
 
