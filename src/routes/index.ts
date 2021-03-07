@@ -6,7 +6,7 @@ import { usersRouter } from 'modules/users';
 const apiRouter = Router();
 
 // Add API Routes
-apiRouter.use(authRouter);
-apiRouter.use(usersRouter);
+apiRouter.use('/auth', authRouter);
+apiRouter.use('/user', usersRouter);
 
 export default apiRouter;
