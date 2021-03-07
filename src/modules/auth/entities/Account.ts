@@ -12,7 +12,7 @@ import { Profile } from 'modules/users/entities/Profile';
 
 import { TypeAccount } from './TypeAccount';
 
-@Entity({ name: 'user-account', schema: 'users' })
+@Entity({ name: 'user_account', schema: 'users' })
 export class Account {
   @PrimaryGeneratedColumn()
   id: number;
