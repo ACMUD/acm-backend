@@ -5,8 +5,8 @@ import { refreshTokenRouter } from './refreshToken';
 
 const authRouter = Router();
 
-authRouter.use('/auth', basicAuthRouter);
-authRouter.use('/auth/refresh_token', refreshTokenRouter);
-authRouter.use('/auth/google', googleAuthRouter);
+authRouter.use('/', basicAuthRouter);
+authRouter.use('/refresh_token', refreshTokenRouter);
+authRouter.use('/google', googleAuthRouter);
 
 export { authRouter };
