@@ -4,20 +4,23 @@ import { Account } from '../entities/Account';
 @EntityRepository(Account)
 class AccountRepository extends Repository<Account> {
   findByEmail(email: string) {
-    return this.findOne({ email });
+    return this.findOne({
+      where: { email },
+      relations: ['typeAccount'],
+    });
   }
 
   async findByIdWithProfile(id: string) {
     return this.findOne({
       where: { id },
-      relations: ['userProfile'],
+      relations: ['typeAccount', 'userProfile'],
     });
   }
 
   async findByEmailWithProfile(email: string) {
     return this.findOne({
       where: { email },
-      relations: ['userProfile'],
+      relations: ['typeAccount', 'userProfile'],
     });
   }
 }

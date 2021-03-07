@@ -53,6 +53,7 @@ async function login({ email, password }: authDTO) {
     email: email.trim().toLowerCase(),
     password,
   });
+
   return getTokens(loggedUSer);
 }
 
