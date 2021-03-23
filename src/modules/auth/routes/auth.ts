@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { login, signup, verifySingup } from '../controllers/authController';
 import { addRefreshToken } from '../utils/refreshCookie';
 
-import { handleBadRequestError } from 'utils/handleError';
+import { handleBadRequestError } from '@Utils/handleError';
 
 const basicAuthRouter = Router();
 

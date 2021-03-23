@@ -1,5 +1,5 @@
 import { hash, compare } from 'bcrypt';
-import { createBlankProfile, getMeByEmail } from 'modules/users';
+import { createBlankProfile, getMeByEmail } from '@Modules/users';
 import { authDTO, createAccountDTO } from '../dtos/authDTO';
 
 import { accountRepository } from '../repositories/accountRepository';

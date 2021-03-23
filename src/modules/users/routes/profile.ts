@@ -1,5 +1,5 @@
 import { Response, Router } from 'express';
-import { authValidation, RequestWithUser } from 'middlewares/authValidation';
+import { authValidation, RequestWithUser } from '@Middlewares/authValidation';
 
 import { getMe, updateMe } from '../controllers/profileController';
 

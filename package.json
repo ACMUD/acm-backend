@@ -5,12 +5,11 @@
   "private": true,
   "main": "dist/index.js",
   "scripts": {
-    "clean": "node clean.js",
+    "dev": "ts-node-dev -r tsconfig-paths/register --watch src --transpile-only src/index.ts",
     "format": "prettier --write ./src",
-    "build": "npm run clean && tsc",
-    "prestart": "npm run build",
-    "start": "NODE_PATH=./dist node .",
-    "start:dev": "NODE_PATH=./src nodemon src/index.ts"
+    "prebuild": "node clean.js",
+    "build": "ttsc --p ./tsconfig.json",
+    "start": "node ."
   },
   "repository": {
     "type": "git",
@@ -41,7 +40,11 @@
     "nodemon": "^2.0.7",
     "prettier": "^2.2.1",
     "ts-node": "^9.1.1",
-    "typescript": "^4.1.3"
+    "ts-node-dev": "^1.1.6",
+    "tsconfig-paths": "^3.9.0",
+    "ttypescript": "^1.5.12",
+    "typescript": "^4.1.3",
+    "typescript-transform-paths": "^2.2.3"
   },
   "dependencies": {
     "bcrypt": "^5.0.0",

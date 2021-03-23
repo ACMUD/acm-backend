@@ -5,8 +5,8 @@ import { addRefreshToken } from '../utils/refreshCookie';
 import {
   handleBadRequestError,
   handleUnauthorizedError,
-} from 'utils/handleError';
-import { verifyRefreshToken } from 'services/jwt';
+} from '@Utils/handleError';
+import { verifyRefreshToken } from '@Services/jwt';
 import { getTokens } from '../utils/generateTokens';
 
 const refreshTokenRouter = Router();

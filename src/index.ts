@@ -1,8 +1,8 @@
 import 'dotenv/config'; // Load environment Variables in .env file
 import { createServer } from 'http';
 import { createApp } from './app';
-import { createDBConnection } from './services/database';
-import { createEmailTransporter } from 'services/emailSender';
+import { createDBConnection } from '@Services/database';
+import { createEmailTransporter } from '@Services/emailSender';
 
 // Create new Server
 async function initServer() {

@@ -1,6 +1,6 @@
 import { randomBytes } from 'crypto';
 import { OAuth2Client } from 'google-auth-library';
-import { updateMe } from 'modules/users';
+import { updateMe } from '@Modules/users';
 import { getTokens } from '../utils/generateTokens';
 
 import {

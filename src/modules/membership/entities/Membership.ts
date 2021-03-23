@@ -5,7 +5,7 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
-import { Profile } from 'modules/users/entities/Profile';
+import { Profile } from '@Modules/users/entities/Profile';
 
 @Entity({ name: 'user_membership', schema: 'users' })
 export class Membership {

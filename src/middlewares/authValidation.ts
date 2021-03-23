@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { verifyAccessToken, userTokenDTO } from 'services/jwt';
-import { handleUnauthorizedError } from 'utils/handleError';
+import { verifyAccessToken, userTokenDTO } from '@Services/jwt';
+import { handleUnauthorizedError } from '@Utils/handleError';
 
 interface RequestWithUser extends Request {
   user?: userTokenDTO;

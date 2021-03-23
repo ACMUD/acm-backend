@@ -1,5 +1,5 @@
-import { typeAccountRepository } from 'modules/auth/repositories/typeAccountRepository';
-import { createDBConnection } from 'services/database';
+import { typeAccountRepository } from '@Modules/auth/repositories/typeAccountRepository';
+import { createDBConnection } from '@Services/database';
 
 export async function createTypeAccounts() {
   try {

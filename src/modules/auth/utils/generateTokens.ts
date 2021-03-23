@@ -2,7 +2,7 @@ import {
   generateAccessToken,
   generateRefreshToken,
   userTokenDTO,
-} from 'services/jwt';
+} from '@Services/jwt';
 import { Account } from '../entities/Account';
 
 export async function getTokens(acount: Account) {

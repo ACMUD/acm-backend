@@ -2,10 +2,10 @@ import { randomBytes } from 'crypto';
 import {
   activeAccount,
   createAccount,
-} from 'modules/auth/controllers/accountController';
-import { accountRepository } from 'modules/auth/repositories/accountRepository';
-import { typeAccountRepository } from 'modules/auth/repositories/typeAccountRepository';
-import { createDBConnection } from 'services/database';
+} from '@Modules/auth/controllers/accountController';
+import { accountRepository } from '@Modules/auth/repositories/accountRepository';
+import { typeAccountRepository } from '@Modules/auth/repositories/typeAccountRepository';
+import { createDBConnection } from '@Services/database';
 import { createTypeAccounts } from './createBasicTypeAccount';
 
 export async function createSuperUser() {

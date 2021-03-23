@@ -1,6 +1,6 @@
 import { NextFunction, Response } from 'express';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
-import { handleUnauthorizedError } from 'utils/handleError';
+import { handleUnauthorizedError } from '@Utils/handleError';
 import { RequestWithUser } from './authValidation';
 
 export function requireRoles(...requiredRoles: string[]) {

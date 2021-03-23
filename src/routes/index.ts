@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { authRouter } from 'modules/auth';
-import { usersRouter } from 'modules/users';
+import { authRouter } from '@Modules/auth';
+import { usersRouter } from '@Modules/users';
 
 // Main Router
 const apiRouter = Router();

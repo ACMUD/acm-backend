@@ -8,7 +8,7 @@ import {
   JoinTable,
   Index,
 } from 'typeorm';
-import { Profile } from 'modules/users/entities/Profile';
+import { Profile } from '@Modules/users/entities/Profile';
 
 import { TypeAccount } from './TypeAccount';
 

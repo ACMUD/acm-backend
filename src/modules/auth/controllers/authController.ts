@@ -7,8 +7,8 @@ import {
 } from './accountController';
 
 import { randomBytes } from 'crypto';
-import { sendMail } from 'services/emailSender';
-import { generateEmailToken, verifyEmailToken } from 'services/jwt';
+import { sendMail } from '@Services/emailSender';
+import { generateEmailToken, verifyEmailToken } from '@Services/jwt';
 
 async function signup({ email, password }: authDTO, verifyAccountUrl?: string) {
   if (!email || !password) throw new Error('Invalid Credentials');
