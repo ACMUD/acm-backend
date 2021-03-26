@@ -5,14 +5,11 @@ services:
     container_name: app-server
     restart: always
     build: .
+    env_file:
+      - .env
     environment:
-      NODE_ENV: ${NODE_ENV}
-      PORT: ${PORT}
       DBHOST: pgsql
       DBPORT: 5432
-      DBNAME: ${DBNAME}
-      DBUSER: ${DBUSER}
-      DBPASS: ${DBPASS}
     ports:
       - ${PORT}:${PORT}
     volumes:
