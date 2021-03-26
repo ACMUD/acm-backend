@@ -17,10 +17,11 @@ profileRouter.get('/', async (req: RequestWithUser, res: Response, next) => {
 
 profileRouter.put('/', async (req: RequestWithUser, res: Response) => {
   const { profileId } = req.user!;
-  const { firstName, lastName, description, udCode } = req.body;
+  const { firstName, lastName, imageUrl, description, udCode } = req.body;
   await updateMe(profileId, {
     firstName,
     lastName,
+    imageUrl,
     description,
     udCode,
   });
