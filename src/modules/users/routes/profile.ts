@@ -1,7 +1,10 @@
+import { StatusCodes } from 'http-status-codes';
 import { Response, Router } from 'express';
+import { handleBadRequestError } from '@Utils/handleError';
 import { authValidation, RequestWithUser } from '@Middlewares/authValidation';
+import { useSingleUploader } from '@Middlewares/uploader';
 
-import { getMe, updateMe } from '../controllers/profileController';
+import { getMe, updateMe, updateImage } from '../controllers/profileController';
 
 const profileRouter = Router();
 
@@ -28,5 +31,21 @@ profileRouter.put('/', async (req: RequestWithUser, res: Response) => {
 
   res.send({ message: 'The profile has been updated successfully' });
 });
+
+profileRouter.post(
+  '/upload_image',
+  useSingleUploader('image'),
+  async (req: RequestWithUser, res: Response) => {
+    try {
+      const { profileId } = req.user!;
+      await updateImage(profileId, req.file);
+      res.status(StatusCodes.CREATED).send({
+        message: 'The profile image has been upload successfully',
+      });
+    } catch (error) {
+      handleBadRequestError(res, error);
+    }
+  }
+);
 
 export { profileRouter };
